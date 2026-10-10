@@ -39,7 +39,7 @@ MirageMesh follows a clean decoupled client-server architecture:
    └── Response Centre & Audit Ledger (/api/response/actions)
 ```
 
-Screenshots Of the Working Web-Application:
+## Screenshots Of the Working Web-Application:
 
 <img width="911" height="515" alt="image" src="https://github.com/user-attachments/assets/c3cb312e-c36a-435a-a5d1-4ce6a2087435" />
 
