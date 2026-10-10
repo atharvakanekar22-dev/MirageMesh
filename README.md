@@ -38,6 +38,7 @@ MirageMesh follows a clean decoupled client-server architecture:
    ├── Deterministic Risk Scoring & Incident Correlation Engine
    └── Response Centre & Audit Ledger (/api/response/actions)
 ```
+<img width="911" height="515" alt="image" src="https://github.com/user-attachments/assets/c3cb312e-c36a-435a-a5d1-4ce6a2087435" />
 
 ### Major Components
 
