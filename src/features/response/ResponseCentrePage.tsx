@@ -57,7 +57,9 @@ export const ResponseCentrePage: React.FC = () => {
               variant="primary"
               size="sm"
               leftIcon={<Play className="h-3.5 w-3.5" />}
+              disabled={incidents.length === 0}
               onClick={() => setIsActionModalOpen(true)}
+              title={incidents.length === 0 ? 'An active incident is required to stage containment' : undefined}
             >
               Stage Containment Action
             </Button>
@@ -92,7 +94,10 @@ export const ResponseCentrePage: React.FC = () => {
               </select>
             </div>
           ) : (
-            <p className="text-xs text-[#77847C]">No incidents in active queue.</p>
+            <div className="text-xs text-[#77847C] space-y-1">
+              <p className="font-medium text-[#17251F]">No incidents in active queue.</p>
+              <p className="text-[11px]">Stage a synthetic decoy and execute a simulation to generate an incident record.</p>
+            </div>
           )}
 
           {selectedIncident && (
@@ -132,8 +137,13 @@ export const ResponseCentrePage: React.FC = () => {
               </p>
               <button
                 type="button"
+                disabled={incidents.length === 0}
                 onClick={() => setIsActionModalOpen(true)}
-                className="text-[11px] text-[#176B4D] hover:underline font-semibold pt-1 inline-block focus-ring"
+                className={`text-[11px] font-semibold pt-1 inline-block focus-ring ${
+                  incidents.length === 0
+                    ? 'text-[#77847C] cursor-not-allowed opacity-60'
+                    : 'text-[#176B4D] hover:underline cursor-pointer'
+                }`}
               >
                 Stage Throttle Action &rarr;
               </button>
@@ -146,8 +156,13 @@ export const ResponseCentrePage: React.FC = () => {
               </p>
               <button
                 type="button"
+                disabled={incidents.length === 0}
                 onClick={() => setIsActionModalOpen(true)}
-                className="text-[11px] text-[#176B4D] hover:underline font-semibold pt-1 inline-block focus-ring"
+                className={`text-[11px] font-semibold pt-1 inline-block focus-ring ${
+                  incidents.length === 0
+                    ? 'text-[#77847C] cursor-not-allowed opacity-60'
+                    : 'text-[#176B4D] hover:underline cursor-pointer'
+                }`}
               >
                 Stage Rotation Action &rarr;
               </button>
@@ -172,7 +187,7 @@ export const ResponseCentrePage: React.FC = () => {
 
         <ResponseAuditTable
           actions={actions}
-          onOpenStageAction={() => setIsActionModalOpen(true)}
+          onOpenStageAction={incidents.length > 0 ? () => setIsActionModalOpen(true) : undefined}
         />
       </div>
 

@@ -30,9 +30,9 @@ export const ContainmentActionModal: React.FC<ContainmentActionModalProps> = ({
   isExecuting,
 }) => {
   const [actionType, setActionType] = useState<ContainmentActionType>('isolate_session')
-  const [targetEntity, setTargetEntity] = useState('198.51.100.42 (Ingress IP / Session)')
-  const [reason, setReason] = useState('Confirmed synthetic canary access detected on controlled honeytoken endpoint.')
-  const [operator, setOperator] = useState('SOC-Analyst-01')
+  const [targetEntity, setTargetEntity] = useState('')
+  const [reason, setReason] = useState('')
+  const [operator, setOperator] = useState('SecOps-Operator')
   const [incidentStatusTransition, setIncidentStatusTransition] = useState<string>('investigating')
   const [isConfirming, setIsConfirming] = useState(false)
   const [error, setError] = useState('')
@@ -54,7 +54,15 @@ export const ContainmentActionModal: React.FC<ContainmentActionModalProps> = ({
 
   const handleStageSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!reason || reason.length < 10) {
+    if (!targetEntity.trim()) {
+      setError('Target entity is required (e.g. source IP, session token, or decoy ID).')
+      return
+    }
+    if (!operator.trim()) {
+      setError('Operator identifier is required.')
+      return
+    }
+    if (!reason || reason.trim().length < 10) {
       setError('Audit reason must be at least 10 characters long.')
       return
     }
