@@ -1,0 +1,55 @@
+:root {
+  /* Surface Tokens (Light Theme Inspired by Reference) */
+  --bg-canvas: #F1F2EF;
+  --bg-workspace: #FFFFFF;
+  --bg-sidebar: #FAFBF9;
+  --surface-primary: #FFFFFF;
+  --surface-secondary: #FAFBF9;
+  --surface-tertiary: #F3F6F3;
+  --surface-hover: #F3F6F3;
+  --surface-active: #E8F2EC;
+
+  /* Border Tokens */
+  --border-subtle: #EEF1EE;
+  --border-default: #E5E9E5;
+  --border-strong: #D1D8D2;
+
+  /* Typography Tokens */
+  --text-primary: #17251F;
+  --text-secondary: #77847C;
+  --text-muted: #9BA69F;
+  --text-inverse: #FFFFFF;
+
+  /* Brand / Primary Accent (Forest Green) */
+  --accent-primary: #176B4D;
+  --accent-deep: #104B37;
+  --accent-hover: #12573E;
+  --accent-surface: #E8F2EC;
+  --accent-surface-subtle: #F0F6F2;
+  --accent-border: #C8DFD4;
+
+  /* Semantic Severity Tokens (Restrained, Light Cyber SOC) */
+  --severity-critical: #C74646;
+  --severity-critical-surface: #FDF2F2;
+  --severity-critical-border: #F7D4D4;
+
+  --severity-high: #C47B24;
+  --severity-high-surface: #FFF8EE;
+  --severity-high-border: #FCE6C9;
+
+  --severity-medium: #A8861B;
+  --severity-medium-surface: #FEFCE8;
+  --severity-medium-border: #FEF08A;
+
+  --severity-low: #2B7A78;
+  --severity-low-surface: #F0F9F8;
+  --severity-low-border: #CCEBE9;
+
+  --status-success: #267B58;
+  --status-success-surface: #E8F5EE;
+  --status-success-border: #C3E6D5;
+
+  --status-neutral: #77847C;
+  --status-neutral-surface: #F3F6F3;
+  --status-neutral-border: #E5E9E5;
+}
