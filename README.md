@@ -4,7 +4,13 @@
 > Built with a high-fidelity forest-green & minimal white design system, zero-production impact guarantees, deterministic threat scoring, and simulated containment workflows.
 
 ---
+## 🚀 Live Demo
 
+**Live Application:** [MirageMesh — Open Dashboard](https://miragemesh.onrender.com)
+
+MirageMesh is an AI-native, deception-based cyber threat detection platform that simulates attack interactions, correlates security events, and provides explainable incident analysis and simulated response actions.
+
+> **Note:** The live demo may take a little time to wake up after inactivity. Some demonstration data may reset when the server restarts.
 ## 1. Product Overview & The Problem Addressed
 
 Traditional perimeter defenses, signature-based EDRs, and volumetric SIEM tools suffer from significant alert fatigue and delayed detection of lateral movement. Attackers who obtain internal credentials or enumerate internal API routes can silently traverse enterprise environments without tripping conventional alarms.
