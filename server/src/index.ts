@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import express, { type Request, type Response, type NextFunction } from 'express'
 import cors from 'cors'
+import path from 'node:path'
+import fs from 'node:fs'
 import { decoyRouter } from './routes/decoys.js'
 import { canaryRouter, handleAdminExport } from './routes/canary.js'
 import { eventRouter } from './routes/events.js'
@@ -10,21 +12,39 @@ import { store } from './store.js'
 
 export const app = express()
 
+// Resolve frontend dist directory (supports running from repository root or server directory)
+const serverDir = typeof __dirname !== 'undefined' ? __dirname : process.cwd()
+const candidateDistPaths = [
+  path.resolve(serverDir, '../../dist'),
+  path.resolve(serverDir, '../dist'),
+  path.resolve(process.cwd(), 'dist'),
+  path.resolve(process.cwd(), '../dist'),
+]
+const clientDistPath = candidateDistPaths.find((p) => fs.existsSync(path.join(p, 'index.html')))
+
 // Configurable CORS policy (no open wildcard)
 const rawAllowedOrigins = process.env.ALLOWED_ORIGINS
 const allowedOrigins = rawAllowedOrigins
-  ? rawAllowedOrigins.split(',').map((o) => o.trim())
+  ? rawAllowedOrigins.split(',').map((o) => o.trim()).filter(Boolean)
   : ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173']
+
+if (process.env.RENDER_EXTERNAL_URL) {
+  const renderOrigin = process.env.RENDER_EXTERNAL_URL.replace(/\/$/, '')
+  if (!allowedOrigins.includes(renderOrigin)) {
+    allowedOrigins.push(renderOrigin)
+  }
+}
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (curl, same-origin, server-to-server) or localhost dev
+      // Allow requests with no origin (curl, same-origin browser fetches, server-to-server) or localhost dev / Render domains
       if (
         !origin ||
         allowedOrigins.includes(origin) ||
         origin.startsWith('http://localhost:') ||
-        origin.startsWith('http://127.0.0.1:')
+        origin.startsWith('http://127.0.0.1:') ||
+        origin.endsWith('.onrender.com')
       ) {
         return callback(null, true)
       }
@@ -47,8 +67,11 @@ const RATE_LIMIT_WINDOW_MS = 60 * 1000 // 1 minute window
 const MAX_REQUESTS_PER_WINDOW = 300 // Generous ceiling for high-velocity simulation runs
 
 function rateLimitMiddleware(req: Request, res: Response, next: NextFunction) {
-  // Always permit health checks without rate limiting
-  if (req.path.startsWith('/api/health')) {
+  // Always permit health checks and non-API frontend asset/page requests without rate limiting
+  if (
+    req.path.startsWith('/api/health') ||
+    (!req.path.startsWith('/api') && !req.path.startsWith('/admin'))
+  ) {
     return next()
   }
 
@@ -125,7 +148,25 @@ app.use('/api/incidents', incidentRouter)
 // Containment Response Audit routes
 app.use('/api/response', responseRouter)
 
-// 404 Handler for unknown routes
+// 404 Handler for unhandled API and admin requests (must NOT fall through to HTML)
+app.all(['/api', '/api/*', '/admin', '/admin/*'], (req: Request, res: Response) => {
+  res.status(404).json({
+    error: `Cannot ${req.method} ${req.originalUrl}`,
+    canaryTriggered: false,
+  })
+})
+
+// Serve static frontend assets and SPA routes in production / when build output exists
+if (clientDistPath) {
+  app.use(express.static(clientDistPath))
+
+  // SPA fallback for all remaining GET requests (e.g. /overview, /decoys, /simulation, /incidents, /response, /settings)
+  app.get('*', (_req: Request, res: Response) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'))
+  })
+}
+
+// 404 Handler for any remaining unhandled non-GET requests
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     error: `Cannot ${req.method} ${req.originalUrl}`,
@@ -149,13 +190,19 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 })
 
 const PORT = Number(process.env.PORT) || 4000
+const HOST = '0.0.0.0'
 
-const isMainModule =
-  process.argv[1] &&
-  (process.argv[1].endsWith('index.ts') || process.argv[1].endsWith('index.js'))
+const isMainModule = Boolean(
+  (typeof require !== 'undefined' && require.main === module) ||
+    (process.argv[1] &&
+      (process.argv[1].endsWith('index.ts') || process.argv[1].endsWith('index.js')))
+)
 
 if (isMainModule) {
-  app.listen(PORT, () => {
-    console.log(`[MirageMesh-Server] Telemetry Engine & Canary Registry active on http://localhost:${PORT}`)
+  app.listen(PORT, HOST, () => {
+    console.log(`[MirageMesh-Server] Telemetry Engine & Canary Registry active on http://${HOST}:${PORT} (port ${PORT})`)
+    if (clientDistPath) {
+      console.log(`[MirageMesh-Server] Serving full-stack UI from: ${clientDistPath}`)
+    }
   })
 }

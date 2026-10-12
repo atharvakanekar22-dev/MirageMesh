@@ -51,10 +51,11 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
     }
   }
 
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4000'
   const testCurlCommand =
     decoy.type === 'credential'
-      ? `curl -H "Authorization: Bearer ${decoy.syntheticValue}" http://localhost:4000/api/internal/keys`
-      : `curl http://localhost:4000/api/internal/resource/${decoy.id}`
+      ? `curl -H "Authorization: Bearer ${decoy.syntheticValue}" ${origin}/api/internal/keys`
+      : `curl ${origin}/api/internal/resource/${decoy.id}`
 
   return (
     <Modal

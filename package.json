@@ -5,12 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:client": "tsc -b && vite build",
+    "build:server": "npm --prefix server run build",
+    "build": "npm run build:client && npm run build:server",
+    "start": "node server/dist/index.js",
     "lint": "oxlint",
     "preview": "vite preview",
+    "postinstall": "npm --prefix server install --include=dev",
+    "server:install": "npm --prefix server install",
     "server:dev": "npm --prefix server run dev",
     "server:build": "npm --prefix server run build",
-    "server:test": "npm --prefix server test"
+    "server:test": "npm --prefix server test",
+    "test:prod": "node test-production-fullstack.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

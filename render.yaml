@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: miragemesh
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm --prefix server install && npm run build
+    startCommand: node server/dist/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production

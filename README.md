@@ -169,11 +169,14 @@ npm run dev
 
 | Target | Command | Description |
 |---|---|---|
+| **Full-Stack Production Build** | `npm run build` | Compiles frontend to `dist/` and backend TypeScript to `server/dist/`. |
+| **Full-Stack Production Run** | `npm start` | Runs Express server in production, serving API and static SPA on `PORT`. |
+| **Full-Stack Production Suite** | `npm run test:prod` | Validates health, SPA fallback routing, static assets, API 404 guard, and telemetry endpoints. |
 | **Backend Unit & Canary Tests** | `npm --prefix server run test` | Validates input validation, decoy generation, canary detection, repeat scoring, and export routes. |
 | **Backend TypeScript Build** | `npm --prefix server run build` | Compiles server TypeScript to `server/dist/`. |
 | **Frontend Linter** | `npm run lint` | Runs `oxlint` across all frontend React/TypeScript source files (0 errors, 0 warnings). |
-| **Frontend Production Build** | `npm run build` | Runs `tsc -b && vite build` to generate optimized client bundle in `dist/`. |
-| **End-to-End Integration Test** | `node test-phase3-e2e.mjs` | Executes full proxy validation: health, decoys, 3 simulation scenarios, incident timeline, explainability, and containment ledger. |
+| **Frontend Production Build** | `npm run build:client` | Runs `tsc -b && vite build` to generate optimized client bundle in `dist/`. |
+| **Development Integration Test** | `node test-phase3-e2e.mjs` | Executes full proxy validation through Vite dev proxy on `localhost:5173`. |
 
 ---
 
@@ -221,24 +224,55 @@ MirageMesh is designed with strict application security controls:
 
 ---
 
-## 10. Deployment Readiness & Instructions
+## 10. Deployment Readiness & Render Deployment Instructions
 
-MirageMesh supports independent frontend and backend deployment:
+MirageMesh is fully configured for deployment on **Render** as **ONE full-stack Web Service** serving both the compiled React SPA and the Node.js/Express telemetry engine under **one single public URL**.
 
-### Backend Deployment (Node.js Platform: Render, Railway, Fly.io, or VPS)
-1. Build backend TypeScript: `npm --prefix server run build`
-2. Set environment variables:
-   - `PORT`: Server port (e.g., `4000` or provider `$PORT`)
-   - `NODE_ENV`: `production`
-   - `ALLOWED_ORIGINS`: Comma-separated URL of the deployed frontend (e.g., `https://miragemesh.vercel.app`)
-3. Start command: `node server/dist/index.js`
-4. Health check URL: `GET /api/health`
+### Render Web Service Configuration (Dashboard Settings)
 
-### Frontend Deployment (Static Host: Vercel, Netlify, Cloudflare Pages)
-1. Set environment variable:
-   - `VITE_API_BASE_URL`: URL of the deployed backend (e.g., `https://api.miragemesh.example.com`)
-2. Build command: `npm run build`
-3. Publish directory: `dist/`
+When creating a new Web Service on [Render](https://dashboard.render.com/):
+
+| Setting Field | Value | Notes |
+|---|---|---|
+| **Service Type** | **Web Service** | Single unified full-stack service. |
+| **Runtime** | **Node** | Node.js v18+ runtime. |
+| **Branch** | `main` | Or your primary deployment branch. |
+| **Root Directory** | *(leave blank)* | Builds from the repository root. |
+| **Build Command** | `npm install && npm --prefix server install && npm run build` | Installs root & server dependencies, builds client to `dist/`, and compiles server to `server/dist/`. |
+| **Start Command** | `node server/dist/index.js` (or `npm start`) | Starts the Express server which binds to `0.0.0.0:$PORT` and serves the frontend. |
+| **Health Check Path** | `/api/health` | Verified endpoint returning HTTP 200 with JSON health status. |
+
+### Environment Variables on Render
+
+Configure the following under **Environment** in the Render Dashboard:
+
+| Variable | Value | Description |
+|---|---|---|
+| `NODE_ENV` | `production` | **Required**. Enables production logging, secure error handling, and frontend static asset caching. |
+| `PORT` | *(auto-assigned by Render)* | **Do not override**. Render injects `$PORT` (e.g. `10000`). Express automatically reads `process.env.PORT` and binds to `0.0.0.0`. |
+| `ALLOWED_ORIGINS` | *(optional)* | Render services automatically allow their own `*.onrender.com` domain. If you attach a custom domain (e.g. `https://miragemesh.example.com`), provide it here as a comma-separated list. |
+| `VITE_API_BASE_URL` | *(leave empty / unset)* | **Leave empty**. In unified deployment, frontend uses relative same-origin `/api/...` calls. Do not point to an external URL. |
+
+---
+
+### Alternative: One-Click Render Blueprint (`render.yaml`)
+
+This repository includes a [`render.yaml`](./render.yaml) specification file. To deploy via Blueprint:
+1. Push your changes to GitHub.
+2. In the Render Dashboard, click **New +** -> **Blueprint**.
+3. Select your `MirageMesh` repository.
+4. Render will automatically parse `render.yaml` and configure the Web Service, build command, start command, and health check path.
+
+---
+
+### Post-Deployment Verification Checklist
+
+Once your service status turns **Available** on Render:
+1. **Health Check**: Visit `https://<your-service>.onrender.com/api/health` to confirm `{ "status": "healthy" }`.
+2. **Frontend Entry Point**: Visit `https://<your-service>.onrender.com` to confirm automatic redirection to `/overview` and the forest-green dashboard.
+3. **Deep Links**: Refresh on `/decoys`, `/simulation`, `/incidents`, `/response`, or `/settings` to verify that client-side SPA routing resolves without 404s.
+4. **API Isolation**: Verify that `https://<your-service>.onrender.com/api/invalid-route` returns a 404 JSON response instead of the frontend HTML.
+5. **Decoy Simulation**: Create a synthetic credential in **Decoy Lab**, run a controlled attack scenario in **Simulation**, and verify the correlated incident in **Incidents**.
 
 ---
 
