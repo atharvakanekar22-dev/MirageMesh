@@ -238,8 +238,8 @@ When creating a new Web Service on [Render](https://dashboard.render.com/):
 | **Runtime** | **Node** | Node.js v18+ runtime. |
 | **Branch** | `main` | Or your primary deployment branch. |
 | **Root Directory** | *(leave blank)* | Builds from the repository root. |
-| **Build Command** | `npm install && npm --prefix server install && npm run build` | Installs root & server dependencies, builds client to `dist/`, and compiles server to `server/dist/`. |
-| **Start Command** | `node server/dist/index.js` (or `npm start`) | Starts the Express server which binds to `0.0.0.0:$PORT` and serves the frontend. |
+| **Build Command** | `npm install --include=dev && npm run build` *(or `npm run render-build`)* | Installs root dependencies with `--include=dev`, automatically triggers server installation via `postinstall`, builds client to `dist/`, and compiles server to `server/dist/`. |
+| **Start Command** | `node server/dist/index.js` *(or `npm start`)* | Starts the Express server which binds to `0.0.0.0:$PORT` and serves the frontend. |
 | **Health Check Path** | `/api/health` | Verified endpoint returning HTTP 200 with JSON health status. |
 
 ### Environment Variables on Render

@@ -3,7 +3,7 @@ services:
     name: miragemesh
     runtime: node
     plan: free
-    buildCommand: npm install && npm --prefix server install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: node server/dist/index.js
     healthCheckPath: /api/health
     envVars:
