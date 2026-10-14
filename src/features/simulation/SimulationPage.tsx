@@ -8,6 +8,7 @@ import { useSimulation } from '@/hooks/useSimulation'
 import { useDecoys } from '@/hooks/useDecoys'
 import { useIncidents } from '@/hooks/useIncidents'
 import { useEvents } from '@/hooks/useEvents'
+import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
 
 export const SimulationPage: React.FC = () => {
   const {
@@ -48,7 +49,7 @@ export const SimulationPage: React.FC = () => {
         <span className="leading-relaxed">
           <strong className="font-semibold text-[#104B37]">Controlled Scenario Environment: </strong>
           Simulation probes execute exclusively against application-owned canary endpoints using real registered decoy IDs.
-          All telemetry events, trigger count updates, and incident risk calculations are live.
+          All <GlossaryTerm term="Telemetry">A record of what happened in the app, such as which test item was accessed and when.</GlossaryTerm> events, trigger count updates, and incident risk calculations are live.
         </span>
       </div>
 

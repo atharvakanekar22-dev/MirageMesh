@@ -15,6 +15,7 @@ import { RecentIncidentsList } from './RecentIncidentsList'
 import { useDecoys } from '@/hooks/useDecoys'
 import { useIncidents } from '@/hooks/useIncidents'
 import { useEvents } from '@/hooks/useEvents'
+import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
 
 export const OverviewPage: React.FC = () => {
   const navigate = useNavigate()
@@ -79,13 +80,18 @@ export const OverviewPage: React.FC = () => {
               View Incidents
             </button>
 
-            <button
-              type="button"
-              onClick={() => navigate('/decoys')}
-              className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold rounded-full bg-[#176B4D] text-white hover:bg-[#104B37] transition-all focus-ring shadow-2xs cursor-pointer"
-            >
-              <span>+ Generate Decoy</span>
-            </button>
+            <div className="inline-flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigate('/decoys')}
+                className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold rounded-full bg-[#176B4D] text-white hover:bg-[#104B37] transition-all focus-ring shadow-2xs cursor-pointer"
+              >
+                <span>+ Generate Decoy</span>
+              </button>
+              <span className="text-xs text-[#77847C]">
+                <GlossaryTerm term="What’s a decoy?">A fake digital item, like a password or web page, that helps spot someone snooping where they shouldn’t.</GlossaryTerm>
+              </span>
+            </div>
           </div>
         }
       />

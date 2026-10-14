@@ -6,6 +6,7 @@ import { DecoyGenerationForm } from './DecoyGenerationForm'
 import { DecoyRegistryTable } from './DecoyRegistryTable'
 import { DecoyDetailModal } from './DecoyDetailModal'
 import { useDecoys } from '@/hooks/useDecoys'
+import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
 import type { CreateDecoyInput } from '@/types/decoy'
 
 export const DecoyLabPage: React.FC = () => {
@@ -70,7 +71,7 @@ export const DecoyLabPage: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-medium text-[#77847C]">Total Staged Decoys</span>
+            <span className="text-[11px] font-medium text-[#77847C]">Total Staged <GlossaryTerm term="Decoys">Fake digital items, like passwords or web pages, that are set up to attract and spot intruders.</GlossaryTerm></span>
             <div className="text-2xl font-bold font-mono text-[#17251F] mt-1 tabular-nums">
               {stats.total}
             </div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
 
 export interface FilterOption {
   id: string
@@ -22,6 +23,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 }) => {
   return (
     <div className={cn('flex items-center gap-1.5 flex-wrap', className)}>
+      <span className="mr-1 text-xs text-[#77847C]"><GlossaryTerm term="Filter">A way to show only the items you want to look at, such as incidents with a certain status.</GlossaryTerm></span>
       {options.map((opt) => {
         const isActive = activeFilter === opt.id
         return (
