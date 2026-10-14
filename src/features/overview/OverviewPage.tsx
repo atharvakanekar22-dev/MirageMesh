@@ -15,7 +15,7 @@ import { RecentIncidentsList } from './RecentIncidentsList'
 import { useDecoys } from '@/hooks/useDecoys'
 import { useIncidents } from '@/hooks/useIncidents'
 import { useEvents } from '@/hooks/useEvents'
-import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
+import { HoverTooltip } from '@/components/ui/HoverTooltip'
 
 export const OverviewPage: React.FC = () => {
   const navigate = useNavigate()
@@ -80,7 +80,7 @@ export const OverviewPage: React.FC = () => {
               View Incidents
             </button>
 
-            <div className="inline-flex items-center gap-2">
+            <HoverTooltip content="A fake digital item that helps spot snooping.">
               <button
                 type="button"
                 onClick={() => navigate('/decoys')}
@@ -88,10 +88,7 @@ export const OverviewPage: React.FC = () => {
               >
                 <span>+ Generate Decoy</span>
               </button>
-              <span className="text-xs text-[#77847C]">
-                <GlossaryTerm term="What’s a decoy?">A fake digital item, like a password or web page, that helps spot someone snooping where they shouldn’t.</GlossaryTerm>
-              </span>
-            </div>
+            </HoverTooltip>
           </div>
         }
       />
