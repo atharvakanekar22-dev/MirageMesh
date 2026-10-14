@@ -9,6 +9,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { Modal } from '@/components/ui/Modal'
+import { useSettings } from '@/hooks/useSettings'
 
 interface TopbarProps {
   onOpenMobileSidebar: () => void
@@ -16,9 +17,18 @@ interface TopbarProps {
 
 export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
   const navigate = useNavigate()
+  const { settings } = useSettings()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+
+  // Derive avatar initials from operator handle (up to 2 chars)
+  const initials = settings.operatorHandle
+    .split(/[-_\s]/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('') || 'OP'
 
   const searchTargets = [
     { title: 'Overview Dashboard', path: '/overview', desc: 'Security metrics and telemetry distribution' },
@@ -110,19 +120,20 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
           <div
             onClick={() => navigate('/settings')}
             className="flex items-center gap-2.5 pl-2 py-1 pr-2 rounded-full hover:bg-[#F3F6F3] transition-colors cursor-pointer select-none border border-[#E5E9E5]/60"
-            title="Operator Settings"
+            title={`Workspace: ${settings.workspaceName} — Operator: ${settings.operatorHandle}`}
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8F2EC] border border-[#C8DFD4] text-[#176B4D] font-bold text-xs shrink-0 shadow-2xs">
-              OP
+              {initials}
             </div>
             <div className="hidden sm:flex flex-col text-left pr-1">
-              <span className="text-xs font-semibold text-[#17251F] leading-tight">
-                SecOps Console
+              <span className="text-xs font-semibold text-[#17251F] leading-tight max-w-[120px] truncate">
+                {settings.workspaceName}
               </span>
               <span className="text-[10px] text-[#77847C] leading-tight flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#176B4D]" />
-                Operator Session
+                {settings.operatorHandle}
               </span>
+
             </div>
           </div>
         </div>

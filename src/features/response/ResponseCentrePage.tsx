@@ -192,13 +192,15 @@ export const ResponseCentrePage: React.FC = () => {
       </div>
 
       {/* Staged Action Modal */}
-      <ContainmentActionModal
-        isOpen={isActionModalOpen}
-        onClose={() => setIsActionModalOpen(false)}
-        incidentId={selectedIncident ? selectedIncident.id : 'inc-manual'}
-        onExecute={handleExecuteAction}
-        isExecuting={isExecuting}
-      />
+      {isActionModalOpen && (
+        <ContainmentActionModal
+          isOpen={isActionModalOpen}
+          onClose={() => setIsActionModalOpen(false)}
+          incidentId={selectedIncident ? selectedIncident.id : 'inc-manual'}
+          onExecute={handleExecuteAction}
+          isExecuting={isExecuting}
+        />
+      )}
     </div>
   )
 }

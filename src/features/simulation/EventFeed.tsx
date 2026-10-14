@@ -143,9 +143,14 @@ export const EventFeed: React.FC<EventFeedProps> = ({ events, steps = [], isExec
                 </div>
 
                 {evt.evidence?.rawTelemetrySnippet && (
-                  <div className="rounded-lg bg-white p-2 border border-[#E5E9E5] font-mono text-[11px] text-[#17251F] overflow-x-auto whitespace-pre">
-                    {evt.evidence.rawTelemetrySnippet}
-                  </div>
+                  <details className="mt-1 group">
+                    <summary className="text-[10px] text-[#77847C] hover:text-[#17251F] cursor-pointer font-medium focus-ring select-none">
+                      Raw Event Details
+                    </summary>
+                    <div className="mt-1.5 rounded-lg bg-white p-2.5 border border-[#E5E9E5] font-mono text-[10px] text-[#17251F] overflow-x-auto whitespace-pre">
+                      {evt.evidence.rawTelemetrySnippet}
+                    </div>
+                  </details>
                 )}
               </div>
             ))}

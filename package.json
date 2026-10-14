@@ -17,7 +17,9 @@
     "server:dev": "npm --prefix server run dev",
     "server:build": "npm --prefix server run build",
     "server:test": "npm --prefix server test",
-    "test:prod": "node test-production-fullstack.mjs"
+    "test:prod": "node test-production-fullstack.mjs",
+    "test:refinements": "node test-refinement-suite.mjs",
+    "test": "npm run server:test && npm run test:prod && npm run test:refinements"
   },
   "dependencies": {
     "clsx": "^2.1.1",

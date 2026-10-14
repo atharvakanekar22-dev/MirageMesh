@@ -6,7 +6,6 @@ import { DecoyGenerationForm } from './DecoyGenerationForm'
 import { DecoyRegistryTable } from './DecoyRegistryTable'
 import { DecoyDetailModal } from './DecoyDetailModal'
 import { useDecoys } from '@/hooks/useDecoys'
-import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
 import type { CreateDecoyInput } from '@/types/decoy'
 
 export const DecoyLabPage: React.FC = () => {
@@ -28,20 +27,16 @@ export const DecoyLabPage: React.FC = () => {
   const stats = getDecoyStats()
 
   const handleCreateSuccess = async (input: CreateDecoyInput) => {
-    try {
-      await createDecoy(input)
-      setIsCreateOpen(false)
-    } catch (err) {
-      console.error(err)
-    }
+    await createDecoy(input)
+    setIsCreateOpen(false)
   }
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <PageHeader
-        title="AI Decoy Lab"
-        description="Synthetic canary resource laboratory. Author, configure, and stage zero-privilege honeytokens across infrastructure and application environments."
+        title="Decoy Lab"
+        description="Configure and stage synthetic canary decoys to detect unauthorized access."
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -61,7 +56,7 @@ export const DecoyLabPage: React.FC = () => {
               className="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-semibold rounded-full bg-[#176B4D] text-white hover:bg-[#104B37] transition-all focus-ring shadow-2xs cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
-              <span>Create Synthetic Decoy</span>
+              <span>Create Decoy</span>
             </button>
           </div>
         }
@@ -71,7 +66,7 @@ export const DecoyLabPage: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-medium text-[#77847C]">Total Staged <GlossaryTerm term="Decoys">Fake digital items, like passwords or web pages, that are set up to attract and spot intruders.</GlossaryTerm></span>
+            <span className="text-[11px] font-medium text-[#77847C]">Total Staged Decoys</span>
             <div className="text-2xl font-bold font-mono text-[#17251F] mt-1 tabular-nums">
               {stats.total}
             </div>
@@ -129,8 +124,8 @@ export const DecoyLabPage: React.FC = () => {
       <Modal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
-        title="Generate Synthetic Canary Decoy"
-        description="Configure a zero-privilege decoy artifact for threat detection."
+        title="Create Decoy"
+        description="Configure a synthetic canary resource for threat detection."
         maxWidth="lg"
       >
         <DecoyGenerationForm

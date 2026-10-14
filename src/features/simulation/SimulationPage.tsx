@@ -8,7 +8,6 @@ import { useSimulation } from '@/hooks/useSimulation'
 import { useDecoys } from '@/hooks/useDecoys'
 import { useIncidents } from '@/hooks/useIncidents'
 import { useEvents } from '@/hooks/useEvents'
-import { GlossaryTerm } from '@/components/ui/GlossaryTerm'
 
 export const SimulationPage: React.FC = () => {
   const {
@@ -40,16 +39,15 @@ export const SimulationPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Attack Simulation"
-        description="Controlled canary probing workspace. Dispatches sequential test probes against registered honeytokens to validate detection and deterministic risk scoring."
+        description="Run controlled canary probes against registered decoys to validate detection and risk scoring."
       />
 
-      {/* Honest Local Staging Disclaimer */}
+      {/* Controlled simulation disclaimer */}
       <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#E8F2EC] border border-[#C8DFD4] text-xs text-[#176B4D]">
         <ShieldCheck className="h-4 w-4 shrink-0 text-[#176B4D]" />
         <span className="leading-relaxed">
           <strong className="font-semibold text-[#104B37]">Controlled Scenario Environment: </strong>
-          Simulation probes execute exclusively against application-owned canary endpoints using real registered decoy IDs.
-          All <GlossaryTerm term="Telemetry">A record of what happened in the app, such as which test item was accessed and when.</GlossaryTerm> events, trigger count updates, and incident risk calculations are live.
+          Probes execute only against application-owned canary endpoints using real registered decoy IDs. All events, trigger counts, and risk scores are live.
         </span>
       </div>
 

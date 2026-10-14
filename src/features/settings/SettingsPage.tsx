@@ -6,29 +6,56 @@ import {
   Info,
   Server,
   Layers,
+  AlertCircle,
 } from 'lucide-react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { useSettings } from '@/hooks/useSettings'
+
+type SaveState = 'idle' | 'saving' | 'saved' | 'error'
 
 export const SettingsPage: React.FC = () => {
-  const [workspaceName, setWorkspaceName] = useState('Primary SecOps Staging Mesh')
-  const [operatorId, setOperatorId] = useState('SecOps-Operator')
-  const [notifyOnHighSeverity, setNotifyOnHighSeverity] = useState(true)
-  const [notifyOnDecoyTrip, setNotifyOnDecoyTrip] = useState(true)
-  const [isSaved, setIsSaved] = useState(false)
+  const { settings, saveSettings } = useSettings()
+
+  // Local draft state — only committed on explicit save
+  const [workspaceName, setWorkspaceName] = useState(settings.workspaceName)
+  const [operatorHandle, setOperatorHandle] = useState(settings.operatorHandle)
+  const [notifyOnHighSeverity, setNotifyOnHighSeverity] = useState(settings.notifyOnHighSeverity)
+  const [notifyOnDecoyTrip, setNotifyOnDecoyTrip] = useState(settings.notifyOnDecoyTrip)
+
+  const [saveState, setSaveState] = useState<SaveState>('idle')
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSaved(true)
-    setTimeout(() => setIsSaved(false), 2500)
+    setSaveState('saving')
+    setSaveError(null)
+
+    const result = saveSettings({
+      workspaceName,
+      operatorHandle,
+      notifyOnHighSeverity,
+      notifyOnDecoyTrip,
+    })
+
+    if (result.ok) {
+      setSaveState('saved')
+      setTimeout(() => setSaveState('idle'), 2500)
+    } else {
+      setSaveState('error')
+      setSaveError(result.error)
+    }
   }
+
+  const isSaved = saveState === 'saved'
+  const isError = saveState === 'error'
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Settings"
-        description="Workspace configuration and platform parameters. Note: Server-side integrations and AI model credentials are managed through backend environment variables in later phases."
+        description="Workspace configuration and platform parameters."
         actions={
           <Button
             variant="primary"
@@ -36,10 +63,26 @@ export const SettingsPage: React.FC = () => {
             onClick={handleSave}
             leftIcon={isSaved ? <Check className="h-3.5 w-3.5" /> : undefined}
           >
-            {isSaved ? 'Preferences Saved' : 'Save Preferences'}
+            {isSaved ? 'Saved' : 'Save Preferences'}
           </Button>
         }
       />
+
+      {/* Storage notice */}
+      <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] text-xs text-[#77847C]">
+        <Info className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#9BA69F]" />
+        <span>
+          Preferences are saved locally in your browser. Changes apply immediately across all pages but are not shared with other users or devices.
+        </span>
+      </div>
+
+      {/* Error banner */}
+      {isError && saveError && (
+        <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-[#FDF2F2] border border-[#F7D4D4] text-xs text-[#C74646]">
+          <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <span>{saveError}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSave} className="space-y-5">
         {/* Workspace Identity */}
@@ -55,15 +98,23 @@ export const SettingsPage: React.FC = () => {
             <Input
               label="Active Workspace Name"
               value={workspaceName}
-              onChange={(e) => setWorkspaceName(e.target.value)}
-              helperText="Identifies this deception cluster in notifications"
+              onChange={(e) => {
+                setWorkspaceName(e.target.value)
+                if (saveState !== 'idle') setSaveState('idle')
+              }}
+              helperText="Shown in the header and used to identify this workspace in notifications."
+              maxLength={80}
             />
 
             <Input
               label="Default Operator Handle"
-              value={operatorId}
-              onChange={(e) => setOperatorId(e.target.value)}
-              helperText="Default attribution handle recorded in containment audit logs"
+              value={operatorHandle}
+              onChange={(e) => {
+                setOperatorHandle(e.target.value)
+                if (saveState !== 'idle') setSaveState('idle')
+              }}
+              helperText="Recorded in containment audit logs and shown in the header."
+              maxLength={40}
             />
           </div>
         </div>
@@ -74,7 +125,7 @@ export const SettingsPage: React.FC = () => {
             <div className="p-2 rounded-xl bg-[#E8F2EC] text-[#176B4D]">
               <Bell className="h-4 w-4" />
             </div>
-            <h2 className="text-sm font-semibold text-[#17251F]">Notification Signals</h2>
+            <h2 className="text-sm font-semibold text-[#17251F]">Notification Preferences</h2>
           </div>
 
           <div className="space-y-3 text-xs">
@@ -86,9 +137,9 @@ export const SettingsPage: React.FC = () => {
                 className="h-4 w-4 rounded border-[#E5E9E5] text-[#176B4D] focus:ring-[#176B4D]"
               />
               <div className="text-[#17251F]">
-                <div className="font-semibold">Immediate Canary Trip Alerts</div>
+                <div className="font-semibold">Canary Trip Alerts</div>
                 <div className="text-[11px] text-[#77847C] mt-0.5">
-                  Dispatch high-priority notifications whenever a synthetic decoy honeytoken is queried
+                  Notify when a synthetic decoy is accessed
                 </div>
               </div>
             </label>
@@ -101,9 +152,9 @@ export const SettingsPage: React.FC = () => {
                 className="h-4 w-4 rounded border-[#E5E9E5] text-[#176B4D] focus:ring-[#176B4D]"
               />
               <div className="text-[#17251F]">
-                <div className="font-semibold">Critical Incident Threshold Notifications</div>
+                <div className="font-semibold">High-Severity Incident Alerts</div>
                 <div className="text-[11px] text-[#77847C] mt-0.5">
-                  Notify on composite incident risk score evaluations exceeding threshold of 75/100
+                  Notify when incident risk score exceeds 75/100
                 </div>
               </div>
             </label>
@@ -117,25 +168,20 @@ export const SettingsPage: React.FC = () => {
               <div className="p-2 rounded-xl bg-[#E8F2EC] text-[#176B4D]">
                 <Cpu className="h-4 w-4" />
               </div>
-              <h2 className="text-sm font-semibold text-[#17251F]">
-                AI Provider Integration Status
-              </h2>
+              <h2 className="text-sm font-semibold text-[#17251F]">AI Provider Status</h2>
             </div>
             <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#E8F2EC] text-[#176B4D] border border-[#C8DFD4] font-medium">
-              Server-Side Environment (Phase 4)
+              Server-Managed
             </span>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] text-xs text-[#77847C] space-y-2">
             <div className="flex items-center gap-2 text-[#17251F] font-semibold">
               <Info className="h-4 w-4 text-[#176B4D]" />
-              <span>Production Security Architecture Policy</span>
+              <span>Credential Isolation Policy</span>
             </div>
             <p className="text-[11px] leading-relaxed">
-              MirageMesh adheres strictly to enterprise credential isolation. AI model keys (e.g.
-              Gemini API keys) are never requested or stored within browser localStorage. In Phase
-              4, server-side environment variables (`GEMINI_API_KEY`) manage all authenticated
-              reasoning pipelines.
+              AI model credentials (e.g. API keys) are managed exclusively through backend environment variables. No secrets are stored or exposed in the browser.
             </p>
           </div>
 
@@ -150,7 +196,7 @@ export const SettingsPage: React.FC = () => {
             </div>
             <div className="p-3.5 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5]">
               <span className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Status</span>
-              <div className="font-semibold text-[#176B4D] mt-1 font-mono">Staged (Phase 4)</div>
+              <div className="font-semibold text-[#176B4D] mt-1 font-mono">Staged</div>
             </div>
           </div>
         </div>
@@ -161,7 +207,7 @@ export const SettingsPage: React.FC = () => {
             <div className="p-2 rounded-xl bg-[#E8F2EC] text-[#176B4D]">
               <Server className="h-4 w-4" />
             </div>
-            <h2 className="text-sm font-semibold text-[#17251F]">Platform & Build Info</h2>
+            <h2 className="text-sm font-semibold text-[#17251F]">Platform Info</h2>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-xs font-mono">
@@ -170,7 +216,7 @@ export const SettingsPage: React.FC = () => {
               <div className="text-[#17251F] font-semibold mt-1">v0.1.0-mesh</div>
             </div>
             <div>
-              <span className="text-[10px] text-[#77847C] uppercase font-medium">Frontend Engine</span>
+              <span className="text-[10px] text-[#77847C] uppercase font-medium">Frontend</span>
               <div className="text-[#17251F] font-semibold mt-1">React 19 + Vite</div>
             </div>
             <div>
@@ -178,10 +224,28 @@ export const SettingsPage: React.FC = () => {
               <div className="text-[#267B58] font-semibold mt-1">Strict TS</div>
             </div>
             <div>
-              <span className="text-[10px] text-[#77847C] uppercase font-medium">Design System</span>
-              <div className="text-[#176B4D] font-semibold mt-1">Forest Green Light</div>
+              <span className="text-[10px] text-[#77847C] uppercase font-medium">Design</span>
+              <div className="text-[#176B4D] font-semibold mt-1">Forest Green</div>
             </div>
           </div>
+        </div>
+
+        {/* Bottom Save (duplicate for long-page UX) */}
+        <div className="flex justify-end gap-3 pt-2">
+          {isSaved && (
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#267B58]">
+              <Check className="h-3.5 w-3.5" />
+              Preferences saved locally
+            </span>
+          )}
+          <Button
+            variant="primary"
+            size="sm"
+            type="submit"
+            leftIcon={isSaved ? <Check className="h-3.5 w-3.5" /> : undefined}
+          >
+            {isSaved ? 'Saved' : 'Save Preferences'}
+          </Button>
         </div>
       </form>
     </div>

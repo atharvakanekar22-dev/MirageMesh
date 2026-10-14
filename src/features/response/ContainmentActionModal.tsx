@@ -4,6 +4,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
+import { useSettings } from '@/hooks/useSettings'
 import type { ContainmentActionType } from '@/types/response'
 import type { Incident } from '@/types/incident'
 
@@ -29,13 +30,20 @@ export const ContainmentActionModal: React.FC<ContainmentActionModalProps> = ({
   onExecute,
   isExecuting,
 }) => {
+  const { settings } = useSettings()
   const [actionType, setActionType] = useState<ContainmentActionType>('isolate_session')
   const [targetEntity, setTargetEntity] = useState('')
   const [reason, setReason] = useState('')
-  const [operator, setOperator] = useState('SecOps-Operator')
+  const [operator, setOperator] = useState(settings.operatorHandle)
   const [incidentStatusTransition, setIncidentStatusTransition] = useState<string>('investigating')
   const [isConfirming, setIsConfirming] = useState(false)
   const [error, setError] = useState('')
+
+  const handleClose = () => {
+    setIsConfirming(false)
+    setError('')
+    onClose()
+  }
 
   const actionOptions: { value: ContainmentActionType; label: string }[] = [
     { value: 'isolate_session', label: 'Simulate Ingress Session Isolation' },
@@ -96,10 +104,7 @@ export const ContainmentActionModal: React.FC<ContainmentActionModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => {
-        setIsConfirming(false)
-        onClose()
-      }}
+      onClose={handleClose}
       title={isConfirming ? 'Operator Confirmation Required' : 'Stage Controlled Containment Action'}
       description={`Defensive response workflow for incident ${incidentId}.`}
       maxWidth="md"
@@ -221,7 +226,7 @@ export const ContainmentActionModal: React.FC<ContainmentActionModalProps> = ({
           </div>
 
           <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E5E9E5]">
-            <Button variant="outline" size="sm" type="button" onClick={onClose}>
+            <Button variant="outline" size="sm" type="button" onClick={handleClose}>
               Cancel
             </Button>
             <Button variant="primary" size="sm" type="submit">

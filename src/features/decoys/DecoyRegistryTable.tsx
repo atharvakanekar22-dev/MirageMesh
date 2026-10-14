@@ -127,13 +127,13 @@ export const DecoyRegistryTable: React.FC<DecoyRegistryTableProps> = ({
       {filteredDecoys.length === 0 ? (
         <EmptyState
           icon={Shield}
-          title="No Synthetic Decoys Found"
+          title="No Decoys Found"
           description={
             search || selectedCategory !== 'all'
-              ? 'No staged decoys match your current search or category filter.'
-              : 'Your decoy inventory is empty. Seed synthetic credentials or fake endpoints to begin monitoring canary trips.'
+              ? 'No decoys match your current search or filter.'
+              : 'Your decoy inventory is empty. Create a synthetic canary to start monitoring for unauthorized access.'
           }
-          actionLabel="Generate First Decoy"
+          actionLabel="Create Decoy"
           onAction={onOpenCreate}
         />
       ) : (

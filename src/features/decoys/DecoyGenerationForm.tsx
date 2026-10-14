@@ -7,7 +7,7 @@ import { DecoyGenerationSchema, type DecoyGenerationFormData } from '@/lib/valid
 import type { DecoyCategory, CreateDecoyInput } from '@/types/decoy'
 
 interface DecoyGenerationFormProps {
-  onSuccess: (decoy: CreateDecoyInput) => void
+  onSuccess: (decoy: CreateDecoyInput) => Promise<void> | void
   onCancel: () => void
 }
 
@@ -73,8 +73,10 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
     },
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (isSubmitting) return
+
     const result = DecoyGenerationSchema.safeParse(formData)
 
     if (!result.success) {
@@ -89,9 +91,9 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
     setErrors({})
     setIsSubmitting(true)
 
-    setTimeout(() => {
+    try {
       const syntheticValue = getSyntheticPreview(formData.type, formData.name)
-      onSuccess({
+      await onSuccess({
         name: formData.name,
         type: formData.type,
         syntheticValue,
@@ -99,8 +101,11 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
         namingConvention: formData.namingConvention,
         description: formData.description,
       })
+    } catch (err: any) {
+      setErrors({ form: err?.message || 'Failed to create decoy. Please try again.' })
+    } finally {
       setIsSubmitting(false)
-    }, 350)
+    }
   }
 
   const previewValue = getSyntheticPreview(formData.type, formData.name)
@@ -210,13 +215,18 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
         error={errors.description}
       />
 
+      {/* Form level error */}
+      {errors.form && (
+        <p className="text-xs text-[#C74646] font-medium">{errors.form}</p>
+      )}
+
       {/* Action Buttons */}
       <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E5E9E5]">
-        <Button variant="outline" size="sm" type="button" onClick={onCancel}>
+        <Button variant="outline" size="sm" type="button" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </Button>
-        <Button variant="primary" size="sm" type="submit" isLoading={isSubmitting}>
-          Stage Synthetic Decoy
+        <Button variant="primary" size="sm" type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
+          Create Decoy
         </Button>
       </div>
     </form>

@@ -24,7 +24,7 @@ export const IncidentsPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Incident Investigation"
-        description="Correlated decoy trip investigation workspace. Explains risk scores by explicitly separating observed empirical evidence from rule-based and AI-generated inferences."
+        description="Review and investigate security incidents correlated from decoy canary trips."
         actions={
           <div className="flex items-center gap-2.5">
             <button

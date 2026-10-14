@@ -164,9 +164,6 @@ export const IncidentDetailView: React.FC<IncidentDetailViewProps> = ({
       {/* Tab Panels */}
       {activeTab === 'timeline' && (
         <div className="space-y-4">
-          <div className="text-xs text-[#77847C]">
-            Chronological audit of raw observations logged by decoy sensors and gateway endpoints.
-          </div>
           <IncidentTimeline events={computedTimelineEvents} />
         </div>
       )}
@@ -181,10 +178,6 @@ export const IncidentDetailView: React.FC<IncidentDetailViewProps> = ({
 
       {activeTab === 'mitigation' && (
         <div className="space-y-4 text-xs">
-          <div className="text-[#77847C]">
-            Controlled defensive mitigations recommended based on observed canary interaction.
-          </div>
-
           {incident.analysis?.recommendedMitigations ? (
             <div className="space-y-2.5">
               {incident.analysis.recommendedMitigations.map((action, idx) => (
@@ -208,7 +201,7 @@ export const IncidentDetailView: React.FC<IncidentDetailViewProps> = ({
             </div>
           ) : (
             <div className="p-4 rounded-xl border border-[#E5E9E5] text-center text-[#77847C]">
-              No mitigations generated yet.
+              No mitigations generated for this incident.
             </div>
           )}
         </div>
