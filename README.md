@@ -212,12 +212,9 @@ Follow these exact steps to demonstrate the complete workflow:
 4. **Step 4: Execute Operator-Confirmed Simulated Response (`/response`)**
    - Navigate to `/response`.
    - Click **Execute Containment Action**.
-   - Select the target incident, choose **Simulate Session Isolation**, enter an operator justification note, check **Operator Confirmation**, and click **Execute Action**.
-   - Observe the backend record written to the audit ledger and the incident status transitioning to `contained`.
-   - Execute **Simulate Decoy Credential Rotation** to retire the synthetic decoy asset.
-
+   - Select the target incident, choose **Simulate Session Isolation**, enter an operator justification note, check **Operator Confirmation**, and click **Execute 
 ---
-
+Mirage-Mesh Security --
 ## 9. Security Boundaries & Current Limitations
 
 MirageMesh is designed with strict application security controls:
