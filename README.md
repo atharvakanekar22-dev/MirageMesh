@@ -192,7 +192,7 @@ Follow these exact steps to demonstrate the complete workflow:
 
 1. **Step 1: Stage Synthetic Decoys (Decoy Lab)**
    - Open browser to `http://localhost:5173/decoys`.
-   - Click **Deploy New Decoy**.
+   - Click **Deploy/Add New Decoy**.
    - Create a synthetic credential (`AWS_PROD_DEPLOYMENT_KEY`, environment: `production-sim`).
    - Create a second decoy of type internal API endpoint (`INTERNAL_METRICS_TELEMETRY`, environment: `staging`).
 2. **Step 2: Run Controlled Attack Simulator (`/simulation`)**
