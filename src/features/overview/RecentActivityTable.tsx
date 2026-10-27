@@ -22,7 +22,7 @@ export const RecentActivityTable: React.FC<RecentActivityTableProps> = ({
       <EmptyState
         icon={Radio}
         title="No Security Events Observed"
-        description="The decoy mesh is actively staged. No unauthorized access attempts, canary trips, or synthetic token leaks have occurred in this environment."
+        description="No events yet."
         indicatorText="Live Canary Mesh Listening (Zero Anomalies)"
         actionLabel="Run Attack Simulation"
         onAction={() => {

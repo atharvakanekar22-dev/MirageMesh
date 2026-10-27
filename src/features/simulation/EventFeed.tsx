@@ -18,7 +18,7 @@ export const EventFeed: React.FC<EventFeedProps> = ({ events, steps = [], isExec
       <EmptyState
         icon={Radio}
         title="Simulation Stream Idle"
-        description="Select a controlled scenario and click 'Run Scenario' to dispatch real probes to application-owned canary routes."
+        description="Run a test to see events."
         indicatorText="Controlled Test Harness Ready"
       />
     )

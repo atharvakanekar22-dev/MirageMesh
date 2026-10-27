@@ -24,7 +24,6 @@ export const IncidentsPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Incident Investigation"
-        description="Review and investigate security incidents correlated from decoy canary trips."
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -44,15 +43,15 @@ export const IncidentsPage: React.FC = () => {
       {isLoading && incidents.length === 0 ? (
         <div className="rounded-2xl border border-[#E5E9E5] bg-white p-8 text-center text-xs text-[#77847C]">
           <RefreshCw className="h-5 w-5 animate-spin mx-auto text-[#176B4D] mb-2" />
-          <span>Synchronizing incident ledger with MirageMesh engine...</span>
+          <span>Loading incidents...</span>
         </div>
       ) : incidents.length === 0 ? (
         <EmptyState
           icon={ShieldAlert}
-          title="No Incidents to Investigate"
-          description="There are currently no security incidents recorded from decoy canary triggers. All synthetic decoy assets remain uncompromised."
-          indicatorText="Clean Threat Registry (0 Incidents Recorded)"
-          actionLabel="Review Staged Decoys"
+          title="No incidents"
+          description="New incidents will appear here."
+          indicatorText="All clear"
+          actionLabel="View decoys"
           onAction={() => navigate('/decoys')}
         />
       ) : (
@@ -115,8 +114,8 @@ export const IncidentsPage: React.FC = () => {
             ) : (
               <EmptyState
                 icon={AlertTriangle}
-                title="Select an Incident to Inspect"
-                description="Choose an incident record from the list on the left to examine correlated timeline telemetry, empirical evidence, and risk factors."
+                title="Select an incident"
+                description="Choose an incident from the list."
               />
             )}
           </div>

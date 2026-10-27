@@ -22,10 +22,8 @@ export const RiskDistributionChart: React.FC<RiskDistributionChartProps> = ({ in
         <div className="h-10 w-10 rounded-xl bg-[#E8F2EC] border border-[#C8DFD4] flex items-center justify-center text-[#176B4D] mb-2.5">
           <BarChart3 className="h-5 w-5" />
         </div>
-        <p className="text-xs font-semibold text-[#17251F]">No Risk Distribution Data</p>
-        <p className="text-[11px] text-[#77847C] max-w-xs mt-1">
-          Histogram will populate deterministically once security events and risk incidents are ingested.
-        </p>
+        <p className="text-xs font-semibold text-[#17251F]">No risk data</p>
+        <p className="text-[11px] text-[#77847C] max-w-xs mt-1">Risk data will appear here.</p>
       </div>
     )
   }

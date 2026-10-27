@@ -22,9 +22,8 @@ export const AppShell: React.FC = () => {
   }, [isCollapsed])
 
   return (
-    <div className="min-h-screen bg-[#F1F2EF] p-2 sm:p-4 lg:p-6 flex flex-col justify-center items-center">
-      {/* Outer Workspace Container with Rounded Corners (Reference Inspired) */}
-      <div className="w-full max-w-[1540px] min-h-[94vh] bg-white rounded-2xl sm:rounded-3xl border border-[#E5E9E5] shadow-xs flex overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-canvas)]">
+      <div className="min-h-screen bg-white flex overflow-hidden">
         {/* Sidebar */}
         <Sidebar
           isCollapsed={isCollapsed}
@@ -34,11 +33,11 @@ export const AppShell: React.FC = () => {
         />
 
         {/* Right Content Workspace */}
-        <div className="flex flex-1 flex-col min-w-0 bg-white">
+        <div className="flex flex-1 flex-col min-w-0 bg-[var(--bg-canvas)]">
           <Topbar onOpenMobileSidebar={() => setIsMobileOpen(true)} />
 
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto bg-white">
-            <div className="mx-auto max-w-7xl">
+          <main className="flex-1 px-4 py-6 sm:px-7 lg:px-10 overflow-y-auto bg-[var(--bg-canvas)]">
+            <div className="mx-auto max-w-[1440px]">
               <Outlet />
             </div>
           </main>

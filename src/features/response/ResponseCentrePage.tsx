@@ -32,7 +32,6 @@ export const ResponseCentrePage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Response Centre"
-        description="Controlled containment and incident response orchestrator. Ensures deliberate, auditable defense actions with complete operator justification trails."
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -96,7 +95,7 @@ export const ResponseCentrePage: React.FC = () => {
           ) : (
             <div className="text-xs text-[#77847C] space-y-1">
               <p className="font-medium text-[#17251F]">No incidents in active queue.</p>
-              <p className="text-[11px]">Stage a synthetic decoy and execute a simulation to generate an incident record.</p>
+              <p className="text-[11px]">Run a simulation to create an incident.</p>
             </div>
           )}
 
@@ -122,10 +121,10 @@ export const ResponseCentrePage: React.FC = () => {
         <div className="lg:col-span-2 rounded-2xl border border-[#E5E9E5] bg-white p-5 space-y-3.5 shadow-xs">
           <div className="flex items-center justify-between pb-2.5 border-b border-[#E5E9E5]">
             <span className="text-xs font-semibold text-[#17251F]">
-              Recommended Containment Workflow
+              Quick actions
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#E8F2EC] text-[#176B4D] border border-[#C8DFD4]">
-              Policy Guideline
+              Actions
             </span>
           </div>
 

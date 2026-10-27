@@ -74,8 +74,7 @@ export const SimulationSummary: React.FC<SimulationSummaryProps> = ({
     <div className="rounded-2xl border border-[#E5E9E5] bg-white p-5 space-y-3.5 shadow-xs">
       <div className="flex items-center justify-between pb-3 border-b border-[#E5E9E5]">
         <div>
-          <h3 className="text-xs font-semibold text-[#17251F]">Simulation Report</h3>
-          <p className="text-[11px] text-[#77847C]">Execution result and detection outcome</p>
+          <h3 className="text-xs font-semibold text-[#17251F]">Result</h3>
         </div>
         {summary?.resultingIncidentId && (
           <button
@@ -116,7 +115,7 @@ export const SimulationSummary: React.FC<SimulationSummaryProps> = ({
         </div>
 
         <div className="p-3 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5]">
-          <span className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Events Generated</span>
+          <span className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Events</span>
           <div className="font-semibold font-mono text-[#176B4D] mt-0.5 tabular-nums">
             {eventCount} logged
           </div>
@@ -164,7 +163,7 @@ export const SimulationSummary: React.FC<SimulationSummaryProps> = ({
           {/* Semantic distinctions */}
           <div className="space-y-1 text-[11px] text-[#77847C]">
             <div>
-              <span className="font-medium text-[#17251F]">Execution status: </span>
+              <span className="font-medium text-[#17251F]">Status: </span>
               {isAllFailed
                 ? 'All probe steps failed — no canary events were recorded.'
                 : isPartial
@@ -174,16 +173,13 @@ export const SimulationSummary: React.FC<SimulationSummaryProps> = ({
             </div>
             {eventCount > 0 && (
               <div>
-                <span className="font-medium text-[#17251F]">Detection outcome: </span>
+                <span className="font-medium text-[#17251F]">Detection: </span>
                 {summary.resultingIncidentId
                   ? 'Canary trips were correlated into an incident record by the detection engine.'
                   : `${eventCount} telemetry event(s) generated. No incident was correlated at this risk threshold.`
                 }
               </div>
             )}
-            <div className="text-[10px] pt-1 border-t border-current/10">
-              Note: A successfully executed simulation does not imply a real attack was detected. This is a controlled test against application-owned endpoints only.
-            </div>
           </div>
 
           {/* Expandable duration detail */}

@@ -36,7 +36,6 @@ export const DecoyLabPage: React.FC = () => {
       {/* Page Header */}
       <PageHeader
         title="Decoy Lab"
-        description="Configure and stage synthetic canary decoys to detect unauthorized access."
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -66,7 +65,7 @@ export const DecoyLabPage: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-medium text-[#77847C]">Total Staged Decoys</span>
+            <span className="text-[11px] font-medium text-[#77847C]">Total decoys</span>
             <div className="text-2xl font-bold font-mono text-[#17251F] mt-1 tabular-nums">
               {stats.total}
             </div>
@@ -90,7 +89,7 @@ export const DecoyLabPage: React.FC = () => {
 
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-medium text-[#77847C]">Staged in Pipeline</span>
+            <span className="text-[11px] font-medium text-[#77847C]">Staged</span>
             <div className="text-2xl font-bold font-mono text-[#176B4D] mt-1 tabular-nums">
               {stats.staged}
             </div>
@@ -102,7 +101,7 @@ export const DecoyLabPage: React.FC = () => {
 
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-medium text-[#77847C]">Observed Canary Trips</span>
+            <span className="text-[11px] font-medium text-[#77847C]">Trips</span>
             <div className="text-2xl font-bold font-mono text-[#17251F] mt-1 tabular-nums">
               {stats.triggered}
             </div>
@@ -125,7 +124,6 @@ export const DecoyLabPage: React.FC = () => {
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         title="Create Decoy"
-        description="Configure a synthetic canary resource for threat detection."
         maxWidth="lg"
       >
         <DecoyGenerationForm

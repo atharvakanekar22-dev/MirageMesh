@@ -46,7 +46,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
 
   return (
     <>
-      <header className="flex h-16 w-full items-center justify-between border-b border-[#E5E9E5] bg-white px-4 sm:px-6 shrink-0">
+      <header className="flex h-[68px] w-full items-center justify-between border-b border-[#E5E9E5] bg-white px-4 sm:px-7 shrink-0">
         {/* Left: Mobile trigger & Search bar pill */}
         <div className="flex items-center gap-3 flex-1 max-w-md">
           <button
@@ -61,14 +61,14 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
           {/* Reference pill search bar */}
           <div
             onClick={() => setIsSearchOpen(true)}
-            className="flex items-center justify-between w-full max-w-xs h-9 px-3.5 rounded-full bg-[#FAFBF9] border border-[#E5E9E5] text-xs text-[#9BA69F] hover:border-[#D1D8D2] hover:bg-white transition-all cursor-pointer shadow-2xs group"
+            className="flex items-center justify-between w-full max-w-sm h-10 px-3.5 rounded-lg bg-[#FAFBF9] border border-[#E5E9E5] text-sm text-[#9BA69F] hover:border-[#D1D8D2] hover:bg-white transition-all cursor-pointer shadow-2xs group"
           >
             <div className="flex items-center gap-2">
               <Search className="h-3.5 w-3.5 text-[#77847C] group-hover:text-[#17251F]" />
               <span className="truncate">Search decoy or incident...</span>
             </div>
             <kbd className="px-1.5 py-0.5 rounded-md bg-[#F3F6F3] border border-[#E5E9E5] text-[10px] font-mono text-[#77847C]">
-              ⌘F
+              /
             </kbd>
           </div>
         </div>

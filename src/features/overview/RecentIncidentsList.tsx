@@ -19,7 +19,7 @@ export const RecentIncidentsList: React.FC<RecentIncidentsListProps> = ({ incide
       <EmptyState
         icon={ShieldAlert}
         title="Zero Active Security Incidents"
-        description="No suspicious decoy interactions have triggered correlated threat incidents. Staged decoys remain uncompromised."
+        description="No incidents yet."
         indicatorText="Decoy Integrity Verified"
         actionLabel="Review Staged Decoys"
         onAction={() => navigate('/decoys')}

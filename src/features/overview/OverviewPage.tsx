@@ -56,7 +56,6 @@ export const OverviewPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Overview"
-        description="Monitor decoys, review incidents, and manage response."
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -110,7 +109,7 @@ export const OverviewPage: React.FC = () => {
             <div className="flex items-center justify-between pb-1">
               <div>
                 <h3 className="text-sm font-semibold text-[#17251F]">Recent Incidents</h3>
-                <p className="text-xs text-[#77847C]">Correlated canary trip records</p>
+                <p className="text-xs text-[#77847C]">Latest alerts</p>
               </div>
               <button
                 onClick={() => navigate('/incidents')}
@@ -128,7 +127,7 @@ export const OverviewPage: React.FC = () => {
           {/* Deception Coverage Gauge — primary right panel */}
           <div className="rounded-2xl border border-[#E5E9E5] bg-white p-5 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold text-[#17251F]">Mesh Deception Coverage</h4>
+              <h4 className="text-sm font-semibold text-[#17251F]">Coverage</h4>
               <span className="text-[10px] font-mono font-medium text-[#176B4D] bg-[#E8F2EC] px-2 py-0.5 rounded-full">
                 {coverageStatus}
               </span>
@@ -178,7 +177,7 @@ export const OverviewPage: React.FC = () => {
 
           {/* Platform Workspaces shortcuts */}
           <div className="rounded-2xl border border-[#E5E9E5] bg-white p-5 shadow-xs space-y-3">
-            <h4 className="text-sm font-semibold text-[#17251F]">Platform Workspaces</h4>
+            <h4 className="text-sm font-semibold text-[#17251F]">Shortcuts</h4>
 
             <div className="space-y-2">
               <div
@@ -241,10 +240,8 @@ export const OverviewPage: React.FC = () => {
       <div className="space-y-3 pt-2">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-semibold text-[#17251F]">Recent Security Activity</h3>
-            <p className="text-xs text-[#77847C]">
-              Telemetry events from decoy detection endpoints
-            </p>
+            <h3 className="text-sm font-semibold text-[#17251F]">Activity</h3>
+            <p className="text-xs text-[#77847C]">Latest events</p>
           </div>
         </div>
         <RecentActivityTable

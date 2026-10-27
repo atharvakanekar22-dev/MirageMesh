@@ -55,7 +55,6 @@ export const SettingsPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Settings"
-        description="Workspace configuration and platform parameters."
         actions={
           <Button
             variant="primary"
@@ -68,13 +67,6 @@ export const SettingsPage: React.FC = () => {
         }
       />
 
-      {/* Storage notice */}
-      <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] text-xs text-[#77847C]">
-        <Info className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[#9BA69F]" />
-        <span>
-          Preferences are saved locally in your browser. Changes apply immediately across all pages but are not shared with other users or devices.
-        </span>
-      </div>
 
       {/* Error banner */}
       {isError && saveError && (
@@ -96,24 +88,24 @@ export const SettingsPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Active Workspace Name"
+              label="Workspace name"
               value={workspaceName}
               onChange={(e) => {
                 setWorkspaceName(e.target.value)
                 if (saveState !== 'idle') setSaveState('idle')
               }}
-              helperText="Shown in the header and used to identify this workspace in notifications."
+              helperText="Shown in the header."
               maxLength={80}
             />
 
             <Input
-              label="Default Operator Handle"
+              label="Operator name"
               value={operatorHandle}
               onChange={(e) => {
                 setOperatorHandle(e.target.value)
                 if (saveState !== 'idle') setSaveState('idle')
               }}
-              helperText="Recorded in containment audit logs and shown in the header."
+              helperText="Shown in activity records."
               maxLength={40}
             />
           </div>

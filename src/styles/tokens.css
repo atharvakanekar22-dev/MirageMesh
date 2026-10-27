@@ -1,32 +1,30 @@
 :root {
-  /* Surface Tokens (Light Theme Inspired by Reference) */
-  --bg-canvas: #F1F2EF;
-  --bg-workspace: #FFFFFF;
-  --bg-sidebar: #FAFBF9;
-  --surface-primary: #FFFFFF;
-  --surface-secondary: #FAFBF9;
-  --surface-tertiary: #F3F6F3;
-  --surface-hover: #F3F6F3;
-  --surface-active: #E8F2EC;
+  --bg-canvas: #f5f6f8;
+  --bg-workspace: #ffffff;
+  --bg-sidebar: #182230;
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8f9fb;
+  --surface-tertiary: #f1f3f6;
+  --surface-hover: #eef2f6;
+  --surface-active: #e8eef8;
 
   /* Border Tokens */
-  --border-subtle: #EEF1EE;
-  --border-default: #E5E9E5;
-  --border-strong: #D1D8D2;
+  --border-subtle: #eef0f3;
+  --border-default: #dfe3e8;
+  --border-strong: #c8ced7;
 
   /* Typography Tokens */
-  --text-primary: #17251F;
-  --text-secondary: #77847C;
-  --text-muted: #9BA69F;
+  --text-primary: #182230;
+  --text-secondary: #667085;
+  --text-muted: #98a2b3;
   --text-inverse: #FFFFFF;
 
-  /* Brand / Primary Accent (Forest Green) */
-  --accent-primary: #176B4D;
-  --accent-deep: #104B37;
-  --accent-hover: #12573E;
-  --accent-surface: #E8F2EC;
-  --accent-surface-subtle: #F0F6F2;
-  --accent-border: #C8DFD4;
+  --accent-primary: #315f9f;
+  --accent-deep: #234779;
+  --accent-hover: #294f87;
+  --accent-surface: #e8eef8;
+  --accent-surface-subtle: #f3f6fb;
+  --accent-border: #c7d5eb;
 
   /* Semantic Severity Tokens (Restrained, Light Cyber SOC) */
   --severity-critical: #C74646;
@@ -45,11 +43,11 @@
   --severity-low-surface: #F0F9F8;
   --severity-low-border: #CCEBE9;
 
-  --status-success: #267B58;
-  --status-success-surface: #E8F5EE;
-  --status-success-border: #C3E6D5;
+  --status-success: #28785d;
+  --status-success-surface: #eaf5f0;
+  --status-success-border: #c5e3d5;
 
-  --status-neutral: #77847C;
-  --status-neutral-surface: #F3F6F3;
-  --status-neutral-border: #E5E9E5;
+  --status-neutral: #667085;
+  --status-neutral-surface: #f1f3f6;
+  --status-neutral-border: #dfe3e8;
 }

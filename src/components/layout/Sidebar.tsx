@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex flex-col border-r border-[#E5E9E5] bg-[#FAFBF9] transition-all duration-200 ease-in-out md:static shrink-0 select-none',
+          'fixed inset-y-0 left-0 z-40 flex flex-col border-r border-[#263446] bg-[#182230] transition-all duration-200 ease-in-out md:static shrink-0 select-none',
           isCollapsed ? 'w-16' : 'w-56',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         )}
@@ -86,11 +86,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             {!isCollapsed && (
               <div className="flex flex-col">
-                <span className="text-sm font-bold tracking-tight text-[#17251F]">
+                <span className="text-sm font-semibold tracking-tight text-white">
                   MirageMesh
                 </span>
-                <span className="text-[10px] text-[#77847C] font-medium leading-none">
-                  Deception Tech
+                <span className="text-[10px] text-slate-400 font-medium leading-none">
+                  Security workspace
                 </span>
               </div>
             )}
@@ -100,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             type="button"
             onClick={onToggleCollapse}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className="hidden md:flex h-6 w-6 items-center justify-center rounded-lg text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-colors focus-ring"
+            className="hidden md:flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-white/10 hover:text-white transition-colors focus-ring"
           >
             {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
           </button>
@@ -111,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* MENU section */}
           <div>
             {!isCollapsed && (
-              <div className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#9BA69F]">
+              <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 Menu
               </div>
             )}
@@ -126,10 +126,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     title={isCollapsed ? item.name : undefined}
                     className={({ isActive }) =>
                       cn(
-                        'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-all focus-ring',
+                        'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-medium transition-all focus-ring',
                         isActive
-                          ? 'bg-[#E8F2EC] text-[#176B4D] font-semibold'
-                          : 'text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F]'
+                          ? 'bg-white/10 text-white font-semibold'
+                          : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                       )
                     }
                   >
@@ -142,7 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <Icon
                           className={cn(
                             'h-4 w-4 shrink-0 transition-colors',
-                            isActive ? 'text-[#176B4D]' : 'text-[#77847C] group-hover:text-[#17251F]'
+                            isActive ? 'text-blue-300' : 'text-slate-500 group-hover:text-slate-200'
                           )}
                         />
                         {!isCollapsed && <span className="truncate flex-1">{item.name}</span>}
@@ -169,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* GENERAL section */}
           <div>
             {!isCollapsed && (
-              <div className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#9BA69F]">
+              <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 General
               </div>
             )}
@@ -184,10 +184,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     title={isCollapsed ? item.name : undefined}
                     className={({ isActive }) =>
                       cn(
-                        'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-all focus-ring',
+                        'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-medium transition-all focus-ring',
                         isActive
-                          ? 'bg-[#E8F2EC] text-[#176B4D] font-semibold'
-                          : 'text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F]'
+                          ? 'bg-white/10 text-white font-semibold'
+                          : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                       )
                     }
                   >
@@ -199,7 +199,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <Icon
                           className={cn(
                             'h-4 w-4 shrink-0 transition-colors',
-                            isActive ? 'text-[#176B4D]' : 'text-[#77847C] group-hover:text-[#17251F]'
+                            isActive ? 'text-blue-300' : 'text-slate-500 group-hover:text-slate-200'
                           )}
                         />
                         {!isCollapsed && <span className="truncate flex-1">{item.name}</span>}
@@ -215,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Bottom Promoted Canary Card (Inspired by reference bottom app card) */}
         {!isCollapsed && (
           <div className="p-3">
-            <div className="relative overflow-hidden rounded-2xl bg-[#104B37] p-3.5 text-white shadow-xs">
+            <div className="relative overflow-hidden rounded-xl bg-[#234779] p-3.5 text-white shadow-xs">
               {/* Subtle background glow */}
               <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#176B4D]/60 blur-xl pointer-events-none" />
 

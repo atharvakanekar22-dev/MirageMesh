@@ -36,18 +36,18 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
   const scenarioOptions: { value: ScenarioType; label: string; desc: string }[] = [
     {
       value: 'single_trigger',
-      label: '1. Single Canary Trigger',
-      desc: 'Dispatches one request to an active decoy endpoint (establishes base risk score of 70).',
+      label: 'Single trigger',
+      desc: 'Send one request to a decoy.',
     },
     {
       value: 'repeated_access',
-      label: '2. Repeated Access Probe',
-      desc: 'Repeats requests against the same decoy to verify bounded repeat interaction scoring (75–85).',
+      label: 'Repeated access',
+      desc: 'Send several requests to one decoy.',
     },
     {
       value: 'multi_enumeration',
-      label: '3. Multi-Decoy Enumeration',
-      desc: 'Sequentially accesses multiple distinct registered decoys to test environment scanning scoring (85–100).',
+      label: 'Multiple decoys',
+      desc: 'Check several decoys in sequence.',
     },
   ]
 
@@ -55,10 +55,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
     <div className="rounded-2xl border border-[#E5E9E5] bg-white p-5 space-y-4 shadow-xs">
       <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E9E5]">
         <div>
-          <h2 className="text-xs font-semibold text-[#17251F]">Controlled Scenario Controls</h2>
-          <p className="text-[11px] text-[#77847C]">
-            Execute safe synthetic canary tests against registered application endpoints
-          </p>
+          <h2 className="text-xs font-semibold text-[#17251F]">Choose a test</h2>
         </div>
         <div className="flex items-center gap-1.5 font-mono text-[11px] px-2.5 py-1 rounded-full bg-[#FAFBF9] border border-[#E5E9E5]">
           <span
@@ -82,7 +79,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
           <div className="flex items-start gap-2">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
             <span>
-              <strong>No Active Decoys Found:</strong> Simulations require at least one staged or active decoy to trigger controlled canary routes.
+              <strong>No active decoys.</strong> Create one before running a test.
             </span>
           </div>
           <Button
@@ -91,7 +88,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
             onClick={() => navigate('/decoys')}
             rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
           >
-            Go to Decoy Lab to Stage Decoy
+            Create a decoy
           </Button>
         </div>
       ) : null}
@@ -99,7 +96,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
       {/* Scenario Selector */}
       <div className="space-y-1.5">
         <label className="block text-xs font-medium text-[#17251F]">
-          Select Attack Simulation Scenario
+          Scenario
         </label>
         <div className="space-y-2">
           {scenarioOptions.map((opt) => {
@@ -138,7 +135,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
               label: `${d.name} (${d.type.replace(/_/g, ' ')}) [${d.id}]`,
             })),
           ]}
-          helperText="Select which active canary resource will receive controlled test traffic"
+          helperText="Choose a decoy to test"
         />
       )}
 
@@ -146,7 +143,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
       {config.scenario === 'repeated_access' && (
         <div className="space-y-1.5">
           <label className="block text-xs font-medium text-[#17251F]">
-            Sequential Probe Iterations
+            Number of requests
           </label>
           <div className="grid grid-cols-4 gap-2">
             {[2, 3, 4, 5].map((cnt) => (
@@ -161,23 +158,23 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
                     : 'border-[#E5E9E5] bg-white text-[#77847C] hover:bg-[#FAFBF9]'
                 }`}
               >
-                {cnt} Probes
+                {cnt}
               </button>
             ))}
           </div>
           <p className="text-[11px] text-[#77847C]">
-            Dispatches sequential requests with 650ms intervals to test repeat interaction bounds.
+            Requests are sent one at a time.
           </p>
         </div>
       )}
 
       {config.scenario === 'multi_enumeration' && (
         <div className="p-3 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] text-[11px] text-[#77847C] leading-relaxed">
-          <span className="font-semibold text-[#17251F]">Enumeration Target Plan: </span>
-          Will sequentially probe up to 3 distinct active registered decoys (currently {activeDecoys.length} active in mesh).
+          <span className="font-semibold text-[#17251F]">Test plan: </span>
+          Up to 3 decoys ({activeDecoys.length} available).
           {activeDecoys.length < 2 && (
             <span className="text-[#C47B24] font-medium block mt-1">
-              Note: Multi-decoy enumeration requires at least 2 decoys. Please create another in Decoy Lab.
+              Add another decoy to use this option.
             </span>
           )}
         </div>
@@ -198,7 +195,7 @@ export const SimulationControlPanel: React.FC<SimulationControlPanelProps> = ({
           onClick={onResetSimulation}
           disabled={isRunning || status === 'idle'}
         >
-          Reset View
+          Reset
         </Button>
 
         <div className="flex items-center gap-2">

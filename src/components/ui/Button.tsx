@@ -29,15 +29,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        'bg-[#176B4D] text-white font-medium hover:bg-[#104B37] active:bg-[#0C3829] shadow-xs rounded-xl',
+        'bg-[#176B4D] text-white font-medium hover:bg-[#104B37] active:bg-[#0C3829] shadow-sm rounded-lg',
       secondary:
-        'bg-white text-[#17251F] border border-[#E5E9E5] hover:bg-[#F3F6F3] hover:border-[#D1D8D2] active:bg-[#E8F2EC] shadow-2xs rounded-xl',
+        'bg-white text-[#17251F] border border-[#E5E9E5] hover:bg-[#F3F6F3] hover:border-[#D1D8D2] active:bg-[#E8F2EC] shadow-2xs rounded-lg',
       outline:
-        'bg-transparent text-[#17251F] border border-[#E5E9E5] hover:bg-[#F3F6F3] hover:border-[#D1D8D2] rounded-xl',
+        'bg-transparent text-[#17251F] border border-[#E5E9E5] hover:bg-[#F3F6F3] hover:border-[#D1D8D2] rounded-lg',
       ghost:
-        'bg-transparent text-[#77847C] hover:text-[#17251F] hover:bg-[#F3F6F3] active:bg-[#E8F2EC] rounded-xl',
+        'bg-transparent text-[#77847C] hover:text-[#17251F] hover:bg-[#F3F6F3] active:bg-[#E8F2EC] rounded-lg',
       danger:
-        'bg-[#FDF2F2] text-[#C74646] border border-[#F7D4D4] hover:bg-[#FCE6E6] active:bg-[#F7D4D4] rounded-xl',
+        'bg-[#FDF2F2] text-[#C74646] border border-[#F7D4D4] hover:bg-[#FCE6E6] active:bg-[#F7D4D4] rounded-lg',
     }
 
     const sizeStyles = {
