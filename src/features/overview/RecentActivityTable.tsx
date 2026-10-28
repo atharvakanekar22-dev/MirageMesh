@@ -21,10 +21,10 @@ export const RecentActivityTable: React.FC<RecentActivityTableProps> = ({
     return (
       <EmptyState
         icon={Radio}
-        title="No Security Events Observed"
-        description="No events yet."
-        indicatorText="Live Canary Mesh Listening (Zero Anomalies)"
-        actionLabel="Run Attack Simulation"
+        title="No activity yet"
+        description="Run a simulation or place a decoy to start seeing activity here."
+        indicatorText="Monitoring is ready"
+        actionLabel="Run a simulation"
         onAction={() => {
           if (onViewSimulation) onViewSimulation()
           else navigate('/simulation')

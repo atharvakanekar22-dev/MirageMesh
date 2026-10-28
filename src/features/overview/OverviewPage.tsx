@@ -55,7 +55,7 @@ export const OverviewPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Overview"
+        title="Dashboard"
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -165,7 +165,7 @@ export const OverviewPage: React.FC = () => {
               <div className="flex items-center gap-4 text-xs text-[#77847C] mt-3">
                 <span className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-[#176B4D]" />
-                  <span>Staged ({coveragePercentage}%)</span>
+                  <span>Covered ({coveragePercentage}%)</span>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-[#E5E9E5]" />
@@ -189,7 +189,7 @@ export const OverviewPage: React.FC = () => {
                     <Cpu className="h-4 w-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-[#17251F]">Decoy Lab</div>
+                    <div className="text-xs font-semibold text-[#17251F]">Decoys</div>
                     <div className="text-[11px] text-[#77847C]">Author synthetic canaries</div>
                   </div>
                 </div>
@@ -205,7 +205,7 @@ export const OverviewPage: React.FC = () => {
                     <Activity className="h-4 w-4" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-[#17251F]">Response Centre</div>
+                    <div className="text-xs font-semibold text-[#17251F]">Response</div>
                     <div className="text-[11px] text-[#77847C]">Audited containment actions</div>
                   </div>
                 </div>

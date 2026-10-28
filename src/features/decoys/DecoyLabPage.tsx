@@ -7,6 +7,7 @@ import { DecoyRegistryTable } from './DecoyRegistryTable'
 import { DecoyDetailModal } from './DecoyDetailModal'
 import { useDecoys } from '@/hooks/useDecoys'
 import type { CreateDecoyInput } from '@/types/decoy'
+import { useToast } from '@/hooks/useToast'
 
 export const DecoyLabPage: React.FC = () => {
   const {
@@ -20,22 +21,25 @@ export const DecoyLabPage: React.FC = () => {
     triggerCanaryTest,
     getDecoyStats,
     isLoading,
+    error,
     refreshDecoys,
   } = useDecoys()
+  const { showToast } = useToast()
 
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const stats = getDecoyStats()
 
   const handleCreateSuccess = async (input: CreateDecoyInput) => {
-    await createDecoy(input)
+    const created = await createDecoy(input)
     setIsCreateOpen(false)
+    showToast(`${created.name} was created successfully.`, 'success')
   }
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <PageHeader
-        title="Decoy Lab"
+        title="Decoys"
         actions={
           <div className="flex items-center gap-2.5">
             <button
@@ -62,6 +66,18 @@ export const DecoyLabPage: React.FC = () => {
       />
 
       {/* Decoy Stats Cards */}
+      {error && (
+        <div className="flex flex-col gap-3 rounded-lg border border-[#f7d4d4] bg-[#fdf2f2] p-4 text-sm text-[#c74646] sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-semibold">We could not load your decoys.</p>
+            <p className="mt-1 text-xs">{error}</p>
+          </div>
+          <button type="button" onClick={refreshDecoys} className="self-start rounded-md border border-[#f7d4d4] bg-white px-3 py-1.5 text-xs font-semibold hover:bg-[#fff8f8] focus-ring sm:self-auto">
+            Try again
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
@@ -89,7 +105,7 @@ export const DecoyLabPage: React.FC = () => {
 
         <div className="rounded-2xl bg-white p-4.5 border border-[#E5E9E5] shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-medium text-[#77847C]">Staged</span>
+            <span className="text-[11px] font-medium text-[#77847C]">Paused</span>
             <div className="text-2xl font-bold font-mono text-[#176B4D] mt-1 tabular-nums">
               {stats.staged}
             </div>

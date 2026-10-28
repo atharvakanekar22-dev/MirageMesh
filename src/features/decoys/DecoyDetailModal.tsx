@@ -3,6 +3,8 @@ import { Check, Copy, Trash2 } from 'lucide-react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { StatusBadge } from '@/components/data-display/StatusBadge'
+import { ConfirmDialog } from '@/components/data-display/ConfirmDialog'
+import { useToast } from '@/hooks/useToast'
 import type { Decoy } from '@/types/decoy'
 import { formatDate } from '@/lib/utils'
 
@@ -33,6 +35,8 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
   const [copied, setCopied] = React.useState(false)
   const [isTriggering, setIsTriggering] = React.useState(false)
   const [triggerFeedback, setTriggerFeedback] = React.useState<string | null>(null)
+  const [isRetireConfirmOpen, setIsRetireConfirmOpen] = React.useState(false)
+  const { showToast } = useToast()
 
   if (!decoy) return null
 
@@ -40,6 +44,7 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
     try {
       await navigator.clipboard.writeText(decoy.syntheticValue)
       setCopied(true)
+      showToast('Synthetic value copied.', 'success')
       window.setTimeout(() => setCopied(false), 2000)
     } catch {
       setTriggerFeedback('Could not copy the synthetic value.')
@@ -77,10 +82,7 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
             variant="danger"
             size="sm"
             leftIcon={<Trash2 className="h-3.5 w-3.5" />}
-            onClick={() => {
-              onDelete(decoy.id)
-              onClose()
-            }}
+            onClick={() => setIsRetireConfirmOpen(true)}
           >
             Retire
           </Button>
@@ -93,7 +95,10 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => onToggleStatus(decoy.id, nextStatus)}
+              onClick={() => {
+                onToggleStatus(decoy.id, nextStatus)
+                showToast(nextStatus === 'active' ? 'Decoy activated.' : 'Decoy paused.', 'success')
+              }}
             >
               {decoy.status === 'active' ? 'Pause' : 'Activate'}
             </Button>
@@ -165,6 +170,20 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
           </section>
         )}
       </div>
+      <ConfirmDialog
+        isOpen={isRetireConfirmOpen}
+        onClose={() => setIsRetireConfirmOpen(false)}
+        onConfirm={() => {
+          onDelete(decoy.id)
+          setIsRetireConfirmOpen(false)
+          onClose()
+          showToast('Decoy retired.', 'success')
+        }}
+        title="Retire this decoy?"
+        description="It will be removed from the active registry and will no longer be available for future tests."
+        confirmText="Retire decoy"
+        isDangerous
+      />
     </Modal>
   )
 }

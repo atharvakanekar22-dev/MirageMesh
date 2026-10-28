@@ -28,15 +28,15 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { name: 'Overview', to: '/overview', icon: LayoutDashboard },
-  { name: 'AI Decoy Lab', to: '/decoys', icon: Cpu },
-  { name: 'Attack Simulation', to: '/simulation', icon: Flame },
-  { name: 'Incident Investigation', to: '/incidents', icon: ShieldAlert },
-  { name: 'Response Centre', to: '/response', icon: Activity },
+  { name: 'Dashboard', to: '/overview', icon: LayoutDashboard },
+  { name: 'Decoys', to: '/decoys', icon: Cpu },
+  { name: 'Simulations', to: '/simulation', icon: Flame },
+  { name: 'Incidents', to: '/incidents', icon: ShieldAlert },
+  { name: 'Response', to: '/response', icon: Activity },
 ]
 
 const generalNavItems: NavItem[] = [
-  { name: 'Settings', to: '/settings', icon: Settings },
+  { name: 'Workspace settings', to: '/settings', icon: Settings },
 ]
 
 export const Sidebar: React.FC<SidebarProps> = ({

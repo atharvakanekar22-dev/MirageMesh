@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
@@ -25,6 +25,7 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
   const [formData, setFormData] = useState<DecoyGenerationFormData>(initialFormData)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [step, setStep] = useState<1 | 2>(1)
 
   const updateField = <K extends keyof DecoyGenerationFormData>(
     field: K,
@@ -71,6 +72,12 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="flex items-center gap-3 text-xs">
+        <span className={step === 1 ? 'font-semibold text-[#315f9f]' : 'text-[#667085]'}>1. Choose a resource</span>
+        <span className="h-px flex-1 bg-[#e5e9e5]" />
+        <span className={step === 2 ? 'font-semibold text-[#315f9f]' : 'text-[#667085]'}>2. Name and place it</span>
+      </div>
+
       <div className="flex items-start gap-2.5 rounded-lg border border-[#d9e0e7] bg-[#f8fafc] p-3 text-xs text-[#667085]">
         <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#315f9f]" />
         <p className="leading-relaxed">
@@ -78,54 +85,59 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
         </p>
       </div>
 
-      <Input
-        label="Name"
-        value={formData.name}
-        onChange={(event) => updateField('name', event.target.value)}
-        placeholder="e.g. deploy-key-staging"
-        error={errors.name}
-        autoFocus
-      />
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Select
-          label="What should it look like?"
-          value={formData.type}
-          onChange={(event) =>
-            updateField('type', event.target.value as DecoyGenerationFormData['type'])
-          }
-          options={[
-            { value: 'credential', label: 'Credential or token' },
-            { value: 'database_record', label: 'Database record' },
-            { value: 'api_endpoint', label: 'Internal API resource' },
-            { value: 'package_identifier', label: 'Package identifier' },
-          ]}
-        />
-
-        <Select
-          label="Environment"
-          value={formData.environment}
-          onChange={(event) =>
-            updateField(
-              'environment',
-              event.target.value as DecoyGenerationFormData['environment']
-            )
-          }
-          options={[
-            { value: 'staging', label: 'Staging' },
-            { value: 'development', label: 'Development' },
-            { value: 'production-sim', label: 'Production simulation' },
-          ]}
-        />
-      </div>
-
-      <Input
-        label="Notes (optional)"
-        value={formData.description || ''}
-        onChange={(event) => updateField('description', event.target.value)}
-        placeholder="Where will you place this decoy?"
-        error={errors.description}
-      />
+      {step === 1 ? (
+        <div className="space-y-4">
+          <Select
+            label="What should it look like?"
+            value={formData.type}
+            onChange={(event) =>
+              updateField('type', event.target.value as DecoyGenerationFormData['type'])
+            }
+            options={[
+              { value: 'credential', label: 'Credential or token' },
+              { value: 'database_record', label: 'Database record' },
+              { value: 'api_endpoint', label: 'Internal API resource' },
+              { value: 'package_identifier', label: 'Package identifier' },
+            ]}
+          />
+          <p className="text-xs leading-relaxed text-[#667085]">
+            Choose the kind of synthetic resource you want to monitor for unauthorized use.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <Input
+            label="Name"
+            value={formData.name}
+            onChange={(event) => updateField('name', event.target.value)}
+            placeholder="e.g. deploy-key-staging"
+            error={errors.name}
+            autoFocus
+          />
+          <Select
+            label="Environment"
+            value={formData.environment}
+            onChange={(event) =>
+              updateField(
+                'environment',
+                event.target.value as DecoyGenerationFormData['environment']
+              )
+            }
+            options={[
+              { value: 'staging', label: 'Staging' },
+              { value: 'development', label: 'Development' },
+              { value: 'production-sim', label: 'Production simulation' },
+            ]}
+          />
+          <Input
+            label="Notes (optional)"
+            value={formData.description || ''}
+            onChange={(event) => updateField('description', event.target.value)}
+            placeholder="Where will you place this decoy?"
+            error={errors.description}
+          />
+        </div>
+      )}
 
       {errors.form && (
         <p role="alert" className="rounded-md bg-[#fdf2f2] px-3 py-2 text-xs font-medium text-[#c74646]">
@@ -133,13 +145,32 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
         </p>
       )}
 
-      <div className="flex items-center justify-end gap-2 border-t border-[#e5e9e5] pt-4">
+      <div className="flex items-center justify-between gap-2 border-t border-[#e5e9e5] pt-4">
         <Button variant="outline" size="sm" type="button" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </Button>
-        <Button variant="primary" size="sm" type="submit" isLoading={isSubmitting}>
-          {isSubmitting ? 'Creating…' : 'Create decoy'}
-        </Button>
+        <div className="flex gap-2">
+          {step === 2 && (
+            <Button variant="ghost" size="sm" type="button" onClick={() => setStep(1)} disabled={isSubmitting} leftIcon={<ArrowLeft className="h-3.5 w-3.5" />}>
+              Back
+            </Button>
+          )}
+          {step === 1 ? (
+            <Button
+              variant="primary"
+              size="sm"
+              type="button"
+              onClick={() => setStep(2)}
+              rightIcon={<ArrowRight className="h-3.5 w-3.5" />}
+            >
+              Continue
+            </Button>
+          ) : (
+            <Button variant="primary" size="sm" type="submit" isLoading={isSubmitting}>
+              {isSubmitting ? 'Creating…' : 'Create decoy'}
+            </Button>
+          )}
+        </div>
       </div>
     </form>
   )

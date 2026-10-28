@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Menu,
@@ -21,6 +21,29 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+  const [apiStatus, setApiStatus] = useState<'connected' | 'offline'>('offline')
+  const [lastSync, setLastSync] = useState<Date | null>(null)
+
+  useEffect(() => {
+    let active = true
+    const checkHealth = async () => {
+      try {
+        const response = await fetch('/api/health')
+        if (active && response.ok) {
+          setApiStatus('connected')
+          setLastSync(new Date())
+        }
+      } catch {
+        if (active) setApiStatus('offline')
+      }
+    }
+    checkHealth()
+    const interval = window.setInterval(checkHealth, 30000)
+    return () => {
+      active = false
+      window.clearInterval(interval)
+    }
+  }, [])
 
   // Derive avatar initials from operator handle (up to 2 chars)
   const initials = settings.operatorHandle
@@ -31,12 +54,12 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
     .join('') || 'OP'
 
   const searchTargets = [
-    { title: 'Overview Dashboard', path: '/overview', desc: 'Security metrics and telemetry distribution' },
-    { title: 'AI Decoy Lab', path: '/decoys', desc: 'Generate and manage synthetic canaries' },
-    { title: 'Attack Simulation', path: '/simulation', desc: 'Trigger controlled threat scenarios' },
-    { title: 'Incident Investigation', path: '/incidents', desc: 'Investigate correlated security events' },
-    { title: 'Response Centre', path: '/response', desc: 'Execute controlled containment workflows' },
-    { title: 'System Settings', path: '/settings', desc: 'Workspace preferences and node configuration' },
+    { title: 'Dashboard', path: '/overview', desc: 'Health, activity, and incidents' },
+    { title: 'Decoys', path: '/decoys', desc: 'Create and manage synthetic resources' },
+    { title: 'Simulations', path: '/simulation', desc: 'Run controlled test scenarios' },
+    { title: 'Incidents', path: '/incidents', desc: 'Review detected activity' },
+    { title: 'Response', path: '/response', desc: 'Manage containment actions' },
+    { title: 'Workspace settings', path: '/settings', desc: 'Workspace preferences' },
   ]
 
   const filteredSearch = searchTargets.filter((t) =>
@@ -75,6 +98,10 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
 
         {/* Right: Notification controls and User Profile */}
         <div className="flex items-center gap-2.5">
+          <div className="hidden items-center gap-1.5 px-2 text-[10px] text-[#667085] lg:flex" title={lastSync ? `Last checked ${lastSync.toLocaleTimeString()}` : undefined}>
+            <span className={`h-1.5 w-1.5 rounded-full ${apiStatus === 'connected' ? 'bg-[#28785d]' : 'bg-[#c74646]'}`} />
+            {apiStatus === 'connected' ? 'Connected' : 'Offline'}
+          </div>
           {/* Messages icon button */}
           <button
             type="button"

@@ -17,32 +17,32 @@ export const SecurityMetrics: React.FC<SecurityMetricsProps> = ({ data }) => {
   const metricItems: MetricItem[] = [
     {
       id: 'registered-decoys',
-      label: 'Registered Decoys',
+      label: 'Active decoys',
       value: data.registeredDecoys,
-      change: data.registeredDecoys === 0 ? 'No decoys staged' : `${data.registeredDecoys} active in mesh`,
-      subtext: 'Synthetic canary inventory',
+      change: data.registeredDecoys === 0 ? 'Create your first decoy' : `${data.registeredDecoys} ready to monitor`,
+      subtext: 'Synthetic resources being watched',
       isHero: true, // Forest Green Hero Card matching reference
     },
     {
       id: 'decoy-interactions',
-      label: 'Decoy Interactions',
+      label: 'Decoy activity',
       value: data.decoyInteractions,
-      change: data.decoyInteractions === 0 ? 'Zero trips recorded' : `${data.decoyInteractions} trips logged`,
-      subtext: 'Observed canary probes',
+      change: data.decoyInteractions === 0 ? 'No activity yet' : `${data.decoyInteractions} events recorded`,
+      subtext: 'Unauthorized access attempts',
     },
     {
       id: 'open-incidents',
-      label: 'Open Incidents',
+      label: 'Open incidents',
       value: data.openIncidents,
-      change: data.openIncidents === 0 ? 'Zero active cases' : 'Awaiting review',
-      subtext: 'Correlated event clusters',
+      change: data.openIncidents === 0 ? 'Nothing needs attention' : 'Review required',
+      subtext: 'Events grouped for review',
     },
     {
       id: 'critical-incidents',
-      label: 'Critical Incidents',
+      label: 'Critical alerts',
       value: data.criticalIncidents,
-      change: data.criticalIncidents === 0 ? 'No critical breaches' : 'Immediate response',
-      subtext: 'High-confidence alerts',
+      change: data.criticalIncidents === 0 ? 'No urgent alerts' : 'Immediate response',
+      subtext: 'Highest-priority incidents',
     },
   ]
 

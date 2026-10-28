@@ -103,7 +103,16 @@ export const DecoyRegistryTable: React.FC<DecoyRegistryTableProps> = ({
       case 'package_identifier':
         return <Package className="h-4 w-4 text-[#C47B24]" />
     }
+
   }
+
+  const getTypeLabel = (type: DecoyCategory) =>
+    ({
+      credential: 'Credential',
+      database_record: 'Database record',
+      api_endpoint: 'API resource',
+      package_identifier: 'Package identifier',
+    })[type]
 
   return (
     <div className="space-y-4">
@@ -133,11 +142,44 @@ export const DecoyRegistryTable: React.FC<DecoyRegistryTableProps> = ({
               ? 'No decoys match your current search or filter.'
               : 'Your decoy inventory is empty. Create a synthetic canary to start monitoring for unauthorized access.'
           }
-          actionLabel="Create Decoy"
-          onAction={onOpenCreate}
+          actionLabel={search || selectedCategory !== 'all' ? undefined : 'Create Decoy'}
+          onAction={search || selectedCategory !== 'all' ? undefined : onOpenCreate}
+          secondaryActionLabel={search || selectedCategory !== 'all' ? 'Clear filters' : undefined}
+          onSecondaryAction={search || selectedCategory !== 'all' ? () => {
+            setSearch('')
+            setSelectedCategory('all')
+          } : undefined}
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-[#E5E9E5] bg-white shadow-xs">
+        <div className="rounded-2xl border border-[#E5E9E5] bg-white shadow-xs">
+          <div className="divide-y divide-[#E5E9E5] md:hidden">
+            {filteredDecoys.map((decoy) => (
+              <button
+                key={decoy.id}
+                type="button"
+                onClick={() => onSelectDecoy(decoy.id)}
+                className="block w-full p-4 text-left hover:bg-[#FAFBF9] focus-ring"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="rounded-lg border border-[#C8DFD4] bg-[#E8F2EC] p-2 shrink-0">
+                      {getTypeIcon(decoy.type)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-[#17251F]">{decoy.name}</p>
+                      <p className="mt-0.5 truncate font-mono text-[10px] text-[#77847C]">{decoy.id}</p>
+                    </div>
+                  </div>
+                  <StatusBadge status={decoy.status} />
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs text-[#667085]">
+                  <span>{getTypeLabel(decoy.type)}</span>
+                  <span>{decoy.triggerCount} tests · {formatDate(decoy.createdAt)}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-[#E5E9E5] bg-[#FAFBF9] text-[#77847C]">
@@ -197,7 +239,7 @@ export const DecoyRegistryTable: React.FC<DecoyRegistryTableProps> = ({
                   </td>
                   <td className="py-3 px-4">
                     <span className="capitalize text-[#77847C] font-medium">
-                      {decoy.type.replace(/_/g, ' ')}
+                      {getTypeLabel(decoy.type)}
                     </span>
                   </td>
                   <td className="py-3 px-4">
@@ -218,7 +260,7 @@ export const DecoyRegistryTable: React.FC<DecoyRegistryTableProps> = ({
                       }}
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-[#176B4D] bg-[#E8F2EC] hover:bg-[#176B4D] hover:text-white transition-all focus-ring shadow-2xs"
                     >
-                      <span>Inspect</span>
+                      <span>View details</span>
                       <ExternalLink className="h-3 w-3" />
                     </button>
                   </td>
@@ -226,6 +268,7 @@ export const DecoyRegistryTable: React.FC<DecoyRegistryTableProps> = ({
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

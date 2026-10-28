@@ -23,7 +23,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) =
       badgeClass: 'bg-[#F3F6F3] text-[#77847C] border-[#E5E9E5]',
     },
     staged: {
-      label: 'Staged',
+      label: 'Paused',
       dotClass: 'bg-[#176B4D]',
       badgeClass: 'bg-[#E8F2EC] text-[#176B4D] border-[#C8DFD4]',
     },

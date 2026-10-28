@@ -21,7 +21,7 @@ export const RecentIncidentsList: React.FC<RecentIncidentsListProps> = ({ incide
         title="Zero Active Security Incidents"
         description="No incidents yet."
         indicatorText="Decoy Integrity Verified"
-        actionLabel="Review Staged Decoys"
+        actionLabel="Review decoys"
         onAction={() => navigate('/decoys')}
       />
     )
