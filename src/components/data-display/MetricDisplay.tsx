@@ -33,7 +33,7 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
           return (
             <div
               key={metric.id}
-              className="rounded-2xl bg-[#176B4D] text-white p-5 shadow-xs flex flex-col justify-between transition-all hover:bg-[#156045] group cursor-default"
+              className="rounded-lg bg-[#315f9f] text-white p-5 shadow-xs flex flex-col justify-between transition-all hover:bg-[#294f87] group cursor-default"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-white/90">{metric.label}</span>
@@ -69,7 +69,7 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
         return (
           <div
             key={metric.id}
-            className="rounded-2xl bg-white border border-[#E5E9E5] p-5 shadow-xs flex flex-col justify-between transition-all hover:border-[#D1D8D2] group cursor-default"
+            className="rounded-lg bg-white border border-[#E5E9E5] p-5 shadow-xs flex flex-col justify-between transition-all hover:border-[#D1D8D2] group cursor-default"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-[#77847C]">{metric.label}</span>

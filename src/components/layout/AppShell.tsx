@@ -23,7 +23,7 @@ export const AppShell: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-canvas)]">
-      <div className="min-h-screen bg-white flex overflow-hidden">
+      <div className="min-h-screen flex overflow-hidden">
         {/* Sidebar */}
         <Sidebar
           isCollapsed={isCollapsed}
@@ -36,8 +36,8 @@ export const AppShell: React.FC = () => {
         <div className="flex flex-1 flex-col min-w-0 bg-[var(--bg-canvas)]">
           <Topbar onOpenMobileSidebar={() => setIsMobileOpen(true)} />
 
-          <main className="flex-1 px-4 py-6 sm:px-7 lg:px-10 overflow-y-auto bg-[var(--bg-canvas)]">
-            <div className="mx-auto max-w-[1440px]">
+          <main className="flex-1 px-4 py-7 sm:px-8 lg:px-12 overflow-y-auto bg-[var(--bg-canvas)]">
+            <div className="mx-auto max-w-[1320px]">
               <Outlet />
             </div>
           </main>

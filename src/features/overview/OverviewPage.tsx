@@ -62,7 +62,7 @@ export const OverviewPage: React.FC = () => {
               type="button"
               onClick={handleRefreshAll}
               disabled={isRefreshing}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium rounded-full bg-white text-[#77847C] border border-[#E5E9E5] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-all focus-ring shadow-2xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium rounded-md bg-white text-[#77847C] border border-[#E5E9E5] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-all focus-ring shadow-2xs cursor-pointer"
               title="Refresh telemetry from backend"
             >
               <RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin text-[#176B4D]' : ''}`} />
@@ -72,7 +72,7 @@ export const OverviewPage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/incidents')}
-              className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded-full bg-white text-[#17251F] border border-[#E5E9E5] hover:bg-[#F3F6F3] transition-all focus-ring shadow-2xs cursor-pointer"
+              className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded-md bg-white text-[#17251F] border border-[#E5E9E5] hover:bg-[#F3F6F3] transition-all focus-ring shadow-2xs cursor-pointer"
             >
               View Incidents
             </button>
@@ -80,7 +80,7 @@ export const OverviewPage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/decoys')}
-              className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold rounded-full bg-[#176B4D] text-white hover:bg-[#104B37] transition-all focus-ring shadow-2xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold rounded-md bg-[#315f9f] text-white hover:bg-[#234779] transition-all focus-ring shadow-2xs cursor-pointer"
             >
               <span>+ Create Decoy</span>
             </button>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Copy, Check, Terminal, Trash2 } from 'lucide-react'
+import { Check, Copy, Trash2 } from 'lucide-react'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { StatusBadge } from '@/components/data-display/StatusBadge'
@@ -13,6 +13,13 @@ interface DecoyDetailModalProps {
   onDelete: (id: string) => void
   onToggleStatus: (id: string, status: Decoy['status']) => void
   onTriggerCanary?: (id: string) => Promise<any>
+}
+
+const typeLabels: Record<Decoy['type'], string> = {
+  credential: 'Credential',
+  database_record: 'Database record',
+  api_endpoint: 'API resource',
+  package_identifier: 'Package identifier',
 }
 
 export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
@@ -29,10 +36,15 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
 
   if (!decoy) return null
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(decoy.syntheticValue)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(decoy.syntheticValue)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      setTriggerFeedback('Could not copy the synthetic value.')
+      window.setTimeout(() => setTriggerFeedback(null), 3000)
+    }
   }
 
   const handleTestProbe = async () => {
@@ -40,32 +52,27 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
     setIsTriggering(true)
     setTriggerFeedback(null)
     try {
-      const res = await onTriggerCanary(decoy.id)
-      setTriggerFeedback(`Canary triggered! Security event ${res.event.id} generated.`)
-      setTimeout(() => setTriggerFeedback(null), 4000)
-    } catch (err: any) {
-      setTriggerFeedback(err?.message || 'Trigger failed')
-      setTimeout(() => setTriggerFeedback(null), 4000)
+      const result = await onTriggerCanary(decoy.id)
+      setTriggerFeedback(`Test complete. Event ${result.event.id} was recorded.`)
+    } catch (error) {
+      setTriggerFeedback(error instanceof Error ? error.message : 'Test failed. Please try again.')
     } finally {
       setIsTriggering(false)
+      window.setTimeout(() => setTriggerFeedback(null), 4000)
     }
   }
 
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4000'
-  const testCurlCommand =
-    decoy.type === 'credential'
-      ? `curl -H "Authorization: Bearer ${decoy.syntheticValue}" ${origin}/api/internal/keys`
-      : `curl ${origin}/api/internal/resource/${decoy.id}`
+  const nextStatus: Decoy['status'] = decoy.status === 'active' ? 'staged' : 'active'
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={decoy.name}
-      description={`Decoy ID: ${decoy.id}`}
-      maxWidth="lg"
+      description="Decoy details"
+      maxWidth="md"
       footer={
-        <div className="flex items-center justify-between w-full">
+        <div className="flex w-full flex-wrap items-center justify-between gap-2">
           <Button
             variant="danger"
             size="sm"
@@ -75,136 +82,88 @@ export const DecoyDetailModal: React.FC<DecoyDetailModalProps> = ({
               onClose()
             }}
           >
-            Retire Decoy
+            Retire
           </Button>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {onTriggerCanary && (
-              <Button
-                variant="primary"
-                size="sm"
-                isLoading={isTriggering}
-                onClick={handleTestProbe}
-              >
-                Test Canary Probe
+              <Button variant="primary" size="sm" isLoading={isTriggering} onClick={handleTestProbe}>
+                Test decoy
               </Button>
             )}
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => {
-                const nextStatus: Decoy['status'] =
-                  decoy.status === 'active' ? 'staged' : 'active'
-                onToggleStatus(decoy.id, nextStatus)
-              }}
+              onClick={() => onToggleStatus(decoy.id, nextStatus)}
             >
-              {decoy.status === 'active' ? 'Move to Staged' : 'Mark as Active'}
+              {decoy.status === 'active' ? 'Pause' : 'Activate'}
             </Button>
             <Button variant="outline" size="sm" onClick={onClose}>
-              Close
+              Done
             </Button>
           </div>
         </div>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-5">
         {triggerFeedback && (
-          <div className="p-3 rounded-xl bg-[#E8F2EC] border border-[#C8DFD4] text-xs font-semibold text-[#176B4D]">
+          <p
+            role="status"
+            className="rounded-md border border-[#c7d5eb] bg-[#f3f6fb] px-3 py-2 text-xs font-medium text-[#315f9f]"
+          >
             {triggerFeedback}
-          </div>
+          </p>
         )}
 
-        {/* Status and Type Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-2xl bg-[#FAFBF9] border border-[#E5E9E5]">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-4 rounded-lg border border-[#e5e9e5] bg-[#f8fafc] p-4 sm:grid-cols-4">
           <div>
-            <div className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Resource Type</div>
-            <div className="text-xs font-semibold text-[#17251F] capitalize mt-0.5">
-              {decoy.type.replace(/_/g, ' ')}
-            </div>
+            <p className="text-[10px] uppercase tracking-wide text-[#77847c]">Type</p>
+            <p className="mt-1 text-sm font-medium text-[#17251f]">{typeLabels[decoy.type]}</p>
           </div>
           <div>
-            <div className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Status</div>
-            <div className="mt-0.5">
+            <p className="text-[10px] uppercase tracking-wide text-[#77847c]">Status</p>
+            <div className="mt-1">
               <StatusBadge status={decoy.status} />
             </div>
           </div>
           <div>
-            <div className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Triggers Logged</div>
-            <div className="text-xs font-bold font-mono text-[#17251F] mt-0.5 tabular-nums">
-              {decoy.triggerCount}
-            </div>
+            <p className="text-[10px] uppercase tracking-wide text-[#77847c]">Tests</p>
+            <p className="mt-1 text-sm font-medium tabular-nums text-[#17251f]">{decoy.triggerCount}</p>
           </div>
           <div>
-            <div className="text-[10px] text-[#77847C] uppercase font-mono font-medium">Created Date</div>
-            <div className="text-[11px] font-mono text-[#77847C] mt-0.5">
-              {formatDate(decoy.createdAt)}
-            </div>
+            <p className="text-[10px] uppercase tracking-wide text-[#77847c]">Created</p>
+            <p className="mt-1 text-xs text-[#667085]">{formatDate(decoy.createdAt)}</p>
           </div>
         </div>
 
-        {/* Synthetic Canary Value */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-medium text-[#17251F]">
-            Synthetic Honeytoken Value (Zero-Privilege)
-          </label>
-          <div className="flex items-center justify-between p-3 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] font-mono text-xs text-[#176B4D]">
-            <span className="truncate pr-2 font-medium">{decoy.syntheticValue}</span>
+        <section className="space-y-2">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-semibold text-[#17251f]">Synthetic value</h3>
             <button
               type="button"
               onClick={handleCopy}
-              className="p-1 rounded-md text-[#77847C] hover:text-[#17251F] hover:bg-white transition-colors shrink-0 focus-ring shadow-2xs"
-              aria-label="Copy synthetic value"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-[#315f9f] hover:text-[#234779] focus-ring"
             >
-              {copied ? <Check className="h-3.5 w-3.5 text-[#267B58]" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
-        </div>
-
-        {/* Controlled Canary Test Command */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-medium text-[#17251F]">
-              Controlled Canary Verification Command
-            </label>
-            <span className="text-[10px] font-mono text-[#176B4D] font-medium bg-[#E8F2EC] px-2 py-0.5 rounded-full">
-              Live Gateway Bound
-            </span>
+          <div className="rounded-lg border border-[#e5e9e5] bg-[#f8fafc] p-3 font-mono text-xs leading-relaxed text-[#315f9f] break-all">
+            {decoy.syntheticValue}
           </div>
-          <div className="p-3 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] font-mono text-xs text-[#17251F] select-all break-all">
-            <code>{testCurlCommand}</code>
-          </div>
-        </div>
+          <p className="text-xs text-[#667085]">Use this made-up value when placing the decoy in a test environment.</p>
+        </section>
 
-        {/* Deployment Context */}
         {decoy.metadata && (
-          <div className="rounded-2xl border border-[#E5E9E5] p-3.5 bg-white space-y-2 text-xs">
-            <div className="text-xs font-semibold text-[#17251F]">Placement & Deployment Metadata</div>
-            <div className="grid grid-cols-2 gap-2 text-[11px]">
-              <div>
-                <span className="text-[#77847C]">Target Environment: </span>
-                <span className="font-mono text-[#17251F] font-medium">{decoy.metadata.environment}</span>
-              </div>
-              {decoy.metadata.namingConvention && (
-                <div>
-                  <span className="text-[#77847C]">Naming Pattern: </span>
-                  <span className="font-mono text-[#17251F] font-medium">{decoy.metadata.namingConvention}</span>
-                </div>
-              )}
-            </div>
+          <section className="space-y-2 border-t border-[#e5e9e5] pt-4">
+            <h3 className="text-sm font-semibold text-[#17251f]">Placement</h3>
+            <p className="text-xs text-[#667085]">
+              Environment: <span className="font-medium capitalize text-[#17251f]">{decoy.metadata.environment}</span>
+            </p>
             {decoy.metadata.description && (
-              <p className="text-[#77847C] text-xs pt-1.5 border-t border-[#E5E9E5]">
-                {decoy.metadata.description}
-              </p>
+              <p className="text-xs leading-relaxed text-[#667085]">{decoy.metadata.description}</p>
             )}
-          </div>
+          </section>
         )}
-
-        {/* Backend Note */}
-        <div className="p-3 rounded-xl border border-[#C8DFD4] bg-[#E8F2EC] text-[11px] text-[#176B4D] flex items-center gap-2">
-          <Terminal className="h-4 w-4 shrink-0" />
-          <span>
-            Connected to MirageMesh Telemetry Engine. Ingestion active at /api/internal/keys & /api/internal/resource/:id
-          </span>
-        </div>
       </div>
     </Modal>
   )

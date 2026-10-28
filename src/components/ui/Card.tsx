@@ -8,9 +8,9 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'primary', children, ...props }, ref) => {
     const variantStyles = {
-      primary: 'bg-white border border-[#E5E9E5] shadow-[0_1px_2px_rgba(16,24,40,0.04)] rounded-xl',
-      secondary: 'bg-[#FAFBF9] border border-[#E5E9E5] rounded-xl',
-      flat: 'bg-transparent border border-[#E5E9E5] rounded-xl',
+      primary: 'bg-white border border-[#E5E9E5] shadow-[0_1px_2px_rgba(16,24,40,0.04)] rounded-lg',
+      secondary: 'bg-[#FAFBF9] border border-[#E5E9E5] rounded-lg',
+      flat: 'bg-transparent border border-[#E5E9E5] rounded-lg',
     }
 
     return (
@@ -32,7 +32,7 @@ export const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   children,
   ...props
 }) => (
-  <div className={cn('flex items-center justify-between pb-3.5 border-b border-[#E5E9E5] mb-4', className)} {...props}>
+  <div className={cn('flex items-center justify-between pb-3 border-b border-[#E5E9E5] mb-4', className)} {...props}>
     {children}
   </div>
 )

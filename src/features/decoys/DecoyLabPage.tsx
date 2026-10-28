@@ -124,6 +124,7 @@ export const DecoyLabPage: React.FC = () => {
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         title="Create Decoy"
+        description="Add a synthetic resource to your monitoring mesh."
         maxWidth="lg"
       >
         <DecoyGenerationForm

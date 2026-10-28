@@ -1,22 +1,22 @@
 :root {
-  --bg-canvas: #f5f6f8;
+  --bg-canvas: #f7f8fa;
   --bg-workspace: #ffffff;
-  --bg-sidebar: #182230;
+  --bg-sidebar: #111827;
   --surface-primary: #ffffff;
-  --surface-secondary: #f8f9fb;
-  --surface-tertiary: #f1f3f6;
-  --surface-hover: #eef2f6;
+  --surface-secondary: #f8fafc;
+  --surface-tertiary: #f1f5f9;
+  --surface-hover: #f1f5f9;
   --surface-active: #e8eef8;
 
   /* Border Tokens */
-  --border-subtle: #eef0f3;
-  --border-default: #dfe3e8;
-  --border-strong: #c8ced7;
+  --border-subtle: #edf0f3;
+  --border-default: #d9e0e7;
+  --border-strong: #b9c4d0;
 
   /* Typography Tokens */
-  --text-primary: #182230;
+  --text-primary: #172033;
   --text-secondary: #667085;
-  --text-muted: #98a2b3;
+  --text-muted: #8b97a7;
   --text-inverse: #FFFFFF;
 
   --accent-primary: #315f9f;

@@ -6,16 +6,26 @@ import type { ContainmentAction, ContainmentActionType } from '@/types/response'
 const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined) || ''
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${url}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  })
+  let response: Response
+  try {
+    response = await fetch(`${API_BASE}${url}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    })
+  } catch {
+    throw new Error(
+      'The MirageMesh API is not running. Start the project with "npm run dev" and try again.'
+    )
+  }
 
   if (!response.ok) {
-    let errorMsg = `HTTP ${response.status}`
+    let errorMsg =
+      response.status === 502
+        ? 'The MirageMesh API is not running. Start the project with "npm run dev" and try again.'
+        : `HTTP ${response.status}`
     try {
       const errorJson = await response.json()
       errorMsg = errorJson.error || errorJson.message || errorMsg
@@ -131,4 +141,3 @@ export const api = {
     })
   },
 }
-

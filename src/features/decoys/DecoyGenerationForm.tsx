@@ -1,88 +1,49 @@
 import React, { useState } from 'react'
-import { AlertCircle, Key, Database, Globe, Package } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { DecoyGenerationSchema, type DecoyGenerationFormData } from '@/lib/validators'
-import type { DecoyCategory, CreateDecoyInput } from '@/types/decoy'
+import type { CreateDecoyInput } from '@/types/decoy'
 
 interface DecoyGenerationFormProps {
   onSuccess: (decoy: CreateDecoyInput) => Promise<void> | void
   onCancel: () => void
 }
 
+const initialFormData: DecoyGenerationFormData = {
+  name: '',
+  type: 'credential',
+  environment: 'staging',
+  description: '',
+}
+
 export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
   onSuccess,
   onCancel,
 }) => {
-  const [formData, setFormData] = useState<DecoyGenerationFormData>({
-    name: '',
-    type: 'credential',
-    environment: 'staging',
-    namingConvention: 'shadow-canary',
-    description: '',
-  })
-
+  const [formData, setFormData] = useState<DecoyGenerationFormData>(initialFormData)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Synthetic preview generator based on category
-  const getSyntheticPreview = (type: DecoyCategory, name: string) => {
-    const slug = name ? name.toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'canary-seed'
-    switch (type) {
-      case 'credential':
-        return `AKIA_${slug.toUpperCase().slice(0, 10)}_CANARY_TOKEN`
-      case 'database_record':
-        return `mongodb+srv://synthetic-${slug}:mesh-canary@db.internal/${slug}_shadow`
-      case 'api_endpoint':
-        return `https://mesh-ingress.meshsec.net/v1/internal/${slug}/token`
-      case 'package_identifier':
-        return `@internal-corp/${slug}-telemetry-sdk@0.0.1`
-    }
+  const updateField = <K extends keyof DecoyGenerationFormData>(
+    field: K,
+    value: DecoyGenerationFormData[K]
+  ) => {
+    setFormData((current) => ({ ...current, [field]: value }))
+    setErrors((current) => ({ ...current, [field]: '', form: '' }))
   }
 
-  const categoryOptions: {
-    type: DecoyCategory
-    label: string
-    icon: React.ComponentType<{ className?: string }>
-    hint: string
-  }[] = [
-    {
-      type: 'credential',
-      label: 'Synthetic Credential',
-      icon: Key,
-      hint: 'IAM key, bearer token, or private key format',
-    },
-    {
-      type: 'database_record',
-      label: 'Fake DB Collection / Record',
-      icon: Database,
-      hint: 'Seeded decoy collection with canary webhook',
-    },
-    {
-      type: 'api_endpoint',
-      label: 'Fake Internal API Resource',
-      icon: Globe,
-      hint: 'Internal routing path monitored for unauthorized probes',
-    },
-    {
-      type: 'package_identifier',
-      label: 'Synthetic Package Identifier',
-      icon: Package,
-      hint: 'Dependency confusion canary package token',
-    },
-  ]
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
     if (isSubmitting) return
 
     const result = DecoyGenerationSchema.safeParse(formData)
-
     if (!result.success) {
       const fieldErrors: Record<string, string> = {}
-      result.error.issues.forEach((err) => {
-        if (err.path[0]) fieldErrors[String(err.path[0])] = err.message
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0]
+        if (field) fieldErrors[String(field)] = issue.message
       })
       setErrors(fieldErrors)
       return
@@ -92,141 +53,92 @@ export const DecoyGenerationForm: React.FC<DecoyGenerationFormProps> = ({
     setIsSubmitting(true)
 
     try {
-      const syntheticValue = getSyntheticPreview(formData.type, formData.name)
       await onSuccess({
-        name: formData.name,
-        type: formData.type,
-        syntheticValue,
-        environment: formData.environment,
-        namingConvention: formData.namingConvention,
-        description: formData.description,
+        name: result.data.name,
+        type: result.data.type,
+        environment: result.data.environment,
+        description: result.data.description,
+        syntheticValue: '',
       })
-    } catch (err: any) {
-      setErrors({ form: err?.message || 'Failed to create decoy. Please try again.' })
+    } catch (error) {
+      setErrors({
+        form: error instanceof Error ? error.message : 'Unable to create decoy. Please try again.',
+      })
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const previewValue = getSyntheticPreview(formData.type, formData.name)
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Notice on synthetic security hygiene */}
-      <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] text-xs text-[#77847C]">
-        <AlertCircle className="h-4 w-4 text-[#176B4D] shrink-0 mt-0.5" />
-        <div className="leading-relaxed">
-          <span className="font-semibold text-[#17251F]">Security Hygiene Principle: </span>
-          All resources generated in this lab are synthetic honeytokens. Never input real production keys or sensitive internal credentials.
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="flex items-start gap-2.5 rounded-lg border border-[#d9e0e7] bg-[#f8fafc] p-3 text-xs text-[#667085]">
+        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#315f9f]" />
+        <p className="leading-relaxed">
+          Use a made-up name. MirageMesh generates the synthetic value automatically; never enter a real credential.
+        </p>
       </div>
 
-      {/* Decoy Category Selector */}
-      <div className="space-y-1.5">
-        <label className="block text-xs font-medium text-[#17251F]">
-          Decoy Category
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {categoryOptions.map((cat) => {
-            const Icon = cat.icon
-            const isSelected = formData.type === cat.type
-            return (
-              <button
-                key={cat.type}
-                type="button"
-                onClick={() => setFormData({ ...formData, type: cat.type })}
-                className={`flex items-start gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer focus-ring ${
-                  isSelected
-                    ? 'border-[#176B4D] bg-[#E8F2EC] text-[#17251F]'
-                    : 'border-[#E5E9E5] bg-white text-[#77847C] hover:bg-[#FAFBF9]'
-                }`}
-              >
-                <div
-                  className={`p-2 rounded-lg ${
-                    isSelected ? 'bg-[#176B4D] text-white' : 'bg-[#F3F6F3] text-[#77847C]'
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-semibold text-[#17251F]">{cat.label}</div>
-                  <div className="text-[11px] text-[#77847C] mt-0.5 truncate">{cat.hint}</div>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Decoy Name */}
       <Input
-        label="Decoy Identifier / Name"
+        label="Name"
         value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        placeholder="e.g. AWS_PROD_DEPLOY_KEY_STAGED"
+        onChange={(event) => updateField('name', event.target.value)}
+        placeholder="e.g. deploy-key-staging"
         error={errors.name}
-        helperText="Used to identify this decoy in event timelines and audit logs"
+        autoFocus
       />
 
-      {/* Target Deployment Environment */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Select
-          label="Target Environment"
-          value={formData.environment}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              environment: e.target.value as 'development' | 'staging' | 'production-sim',
-            })
+          label="What should it look like?"
+          value={formData.type}
+          onChange={(event) =>
+            updateField('type', event.target.value as DecoyGenerationFormData['type'])
           }
           options={[
-            { value: 'staging', label: 'Staging Environment' },
-            { value: 'development', label: 'Development Sandboxes' },
-            { value: 'production-sim', label: 'Production Simulation Mesh' },
+            { value: 'credential', label: 'Credential or token' },
+            { value: 'database_record', label: 'Database record' },
+            { value: 'api_endpoint', label: 'Internal API resource' },
+            { value: 'package_identifier', label: 'Package identifier' },
           ]}
         />
 
-        <Input
-          label="Naming Convention Style"
-          value={formData.namingConvention || ''}
-          onChange={(e) => setFormData({ ...formData, namingConvention: e.target.value })}
-          placeholder="e.g. shadow-canary-v2"
-          helperText="Optional naming prefix/suffix schema"
+        <Select
+          label="Environment"
+          value={formData.environment}
+          onChange={(event) =>
+            updateField(
+              'environment',
+              event.target.value as DecoyGenerationFormData['environment']
+            )
+          }
+          options={[
+            { value: 'staging', label: 'Staging' },
+            { value: 'development', label: 'Development' },
+            { value: 'production-sim', label: 'Production simulation' },
+          ]}
         />
       </div>
 
-      {/* Synthetic Output Preview */}
-      <div className="rounded-xl bg-[#FAFBF9] border border-[#E5E9E5] p-3.5 space-y-1">
-        <div className="flex items-center justify-between text-[11px]">
-          <span className="font-mono text-[#77847C] uppercase font-semibold">Synthetic Canary Pattern</span>
-          <span className="text-[10px] text-[#176B4D] font-mono font-medium">Staged Model</span>
-        </div>
-        <div className="font-mono text-xs text-[#176B4D] font-medium break-all select-all py-1">
-          {previewValue}
-        </div>
-      </div>
-
-      {/* Optional Description */}
       <Input
-        label="Context & Deployment Notes (Optional)"
+        label="Notes (optional)"
         value={formData.description || ''}
-        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-        placeholder="Where this canary will be seeded (e.g. git repo, CI variable)"
+        onChange={(event) => updateField('description', event.target.value)}
+        placeholder="Where will you place this decoy?"
         error={errors.description}
       />
 
-      {/* Form level error */}
       {errors.form && (
-        <p className="text-xs text-[#C74646] font-medium">{errors.form}</p>
+        <p role="alert" className="rounded-md bg-[#fdf2f2] px-3 py-2 text-xs font-medium text-[#c74646]">
+          {errors.form}
+        </p>
       )}
 
-      {/* Action Buttons */}
-      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E5E9E5]">
+      <div className="flex items-center justify-end gap-2 border-t border-[#e5e9e5] pt-4">
         <Button variant="outline" size="sm" type="button" onClick={onCancel} disabled={isSubmitting}>
           Cancel
         </Button>
-        <Button variant="primary" size="sm" type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
-          Create Decoy
+        <Button variant="primary" size="sm" type="submit" isLoading={isSubmitting}>
+          {isSubmitting ? 'Creating…' : 'Create decoy'}
         </Button>
       </div>
     </form>

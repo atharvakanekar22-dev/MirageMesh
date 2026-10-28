@@ -46,14 +46,14 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
 
   return (
     <>
-      <header className="flex h-[68px] w-full items-center justify-between border-b border-[#E5E9E5] bg-white px-4 sm:px-7 shrink-0">
+      <header className="flex h-[64px] w-full items-center justify-between border-b border-[var(--border-default)] bg-white px-4 sm:px-8 shrink-0">
         {/* Left: Mobile trigger & Search bar pill */}
         <div className="flex items-center gap-3 flex-1 max-w-md">
           <button
             type="button"
             onClick={onOpenMobileSidebar}
             aria-label="Open sidebar"
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] md:hidden focus-ring"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] md:hidden focus-ring"
           >
             <Menu className="h-4 w-4" />
           </button>
@@ -61,7 +61,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
           {/* Reference pill search bar */}
           <div
             onClick={() => setIsSearchOpen(true)}
-            className="flex items-center justify-between w-full max-w-sm h-10 px-3.5 rounded-lg bg-[#FAFBF9] border border-[#E5E9E5] text-sm text-[#9BA69F] hover:border-[#D1D8D2] hover:bg-white transition-all cursor-pointer shadow-2xs group"
+            className="flex items-center justify-between w-full max-w-sm h-9 px-3 rounded-md bg-[#F8FAFC] border border-[#E5E9E5] text-xs text-[#9BA69F] hover:border-[#D1D8D2] hover:bg-white transition-all cursor-pointer group"
           >
             <div className="flex items-center gap-2">
               <Search className="h-3.5 w-3.5 text-[#77847C] group-hover:text-[#17251F]" />
@@ -80,7 +80,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
             type="button"
             onClick={() => navigate('/response')}
             aria-label="Response workflows"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E5E9E5] bg-white text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-colors focus-ring shadow-2xs"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-[#E5E9E5] bg-white text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-colors focus-ring"
             title="Containment Queue"
           >
             <Mail className="h-4 w-4" />
@@ -92,7 +92,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
               type="button"
               onClick={() => setIsNotificationOpen(!isNotificationOpen)}
               aria-label="View notifications"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E5E9E5] bg-white text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-colors focus-ring shadow-2xs"
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-[#E5E9E5] bg-white text-[#77847C] hover:bg-[#F3F6F3] hover:text-[#17251F] transition-colors focus-ring"
             >
               <Bell className="h-4 w-4" />
             </button>
@@ -119,7 +119,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onOpenMobileSidebar }) => {
           {/* Operator session capsule */}
           <div
             onClick={() => navigate('/settings')}
-            className="flex items-center gap-2.5 pl-2 py-1 pr-2 rounded-full hover:bg-[#F3F6F3] transition-colors cursor-pointer select-none border border-[#E5E9E5]/60"
+            className="flex items-center gap-2.5 pl-2 py-1 pr-2 rounded-md hover:bg-[#F3F6F3] transition-colors cursor-pointer select-none border border-[#E5E9E5]/60"
             title={`Workspace: ${settings.workspaceName} — Operator: ${settings.operatorHandle}`}
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8F2EC] border border-[#C8DFD4] text-[#176B4D] font-bold text-xs shrink-0 shadow-2xs">

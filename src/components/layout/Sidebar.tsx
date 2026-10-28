@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex flex-col border-r border-[#263446] bg-[#182230] transition-all duration-200 ease-in-out md:static shrink-0 select-none',
+          'fixed inset-y-0 left-0 z-40 flex flex-col border-r border-[#253247] bg-[#111827] transition-all duration-200 ease-in-out md:static shrink-0 select-none',
           isCollapsed ? 'w-16' : 'w-56',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         )}
@@ -86,11 +86,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             {!isCollapsed && (
               <div className="flex flex-col">
-                <span className="text-sm font-semibold tracking-tight text-white">
+                <span className="text-[15px] font-semibold tracking-tight text-white">
                   MirageMesh
                 </span>
                 <span className="text-[10px] text-slate-400 font-medium leading-none">
-                  Security workspace
+                  Control room
                 </span>
               </div>
             )}
@@ -126,9 +126,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     title={isCollapsed ? item.name : undefined}
                     className={({ isActive }) =>
                       cn(
-                        'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-medium transition-all focus-ring',
+                        'group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-xs font-medium transition-all focus-ring',
                         isActive
-                          ? 'bg-white/10 text-white font-semibold'
+                          ? 'bg-white/[0.12] text-white font-semibold'
                           : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                       )
                     }
@@ -137,7 +137,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <>
                         {/* Reference left green pill indicator */}
                         {isActive && !isCollapsed && (
-                          <span className="absolute -left-3 top-2 bottom-2 w-1 rounded-r-full bg-[#176B4D]" />
+                          <span className="absolute -left-3 top-2 bottom-2 w-0.5 rounded-r-full bg-blue-300" />
                         )}
                         <Icon
                           className={cn(
@@ -184,9 +184,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     title={isCollapsed ? item.name : undefined}
                     className={({ isActive }) =>
                       cn(
-                        'group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs font-medium transition-all focus-ring',
+                        'group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-xs font-medium transition-all focus-ring',
                         isActive
-                          ? 'bg-white/10 text-white font-semibold'
+                          ? 'bg-white/[0.12] text-white font-semibold'
                           : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                       )
                     }
@@ -194,7 +194,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     {({ isActive }) => (
                       <>
                         {isActive && !isCollapsed && (
-                          <span className="absolute -left-3 top-2 bottom-2 w-1 rounded-r-full bg-[#176B4D]" />
+                          <span className="absolute -left-3 top-2 bottom-2 w-0.5 rounded-r-full bg-blue-300" />
                         )}
                         <Icon
                           className={cn(
@@ -215,9 +215,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Bottom Promoted Canary Card (Inspired by reference bottom app card) */}
         {!isCollapsed && (
           <div className="p-3">
-            <div className="relative overflow-hidden rounded-xl bg-[#234779] p-3.5 text-white shadow-xs">
+            <div className="relative overflow-hidden rounded-lg bg-[#1d2b42] p-3.5 text-white shadow-xs">
               {/* Subtle background glow */}
-              <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-[#176B4D]/60 blur-xl pointer-events-none" />
+              <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-blue-500/20 blur-xl pointer-events-none" />
 
               <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#E8F2EC] uppercase tracking-wider">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#267B58] animate-pulse" />
